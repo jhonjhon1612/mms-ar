@@ -1,0 +1,52 @@
+# This test case is made mostly for the variable partition memory manager.
+---
+- !java.util.HashMap
+  id: 1
+  sizeInKb: 36
+  timeInSeconds: 12
+  interruptions: []
+- !java.util.HashMap
+  id: 2
+  sizeInKb: 21
+  timeInSeconds: 10
+  interruptions: []
+- !java.util.HashMap
+  id: 3
+  sizeInKb: 6
+  timeInSeconds: 10
+  interruptions: []
+- !java.util.HashMap
+  id: 4
+  sizeInKb: 3
+  timeInSeconds: 37
+  interruptions: []
+- !java.util.HashMap
+  id: 5
+  sizeInKb: 19
+  timeInSeconds: 19
+  interruptions: []
+- !java.util.HashMap
+  id: 6
+  sizeInKb: 31
+  timeInSeconds: 3
+  interruptions: []
+- !java.util.HashMap
+  id: 7
+  sizeInKb: 2
+  timeInSeconds: 5
+  interruptions: []
+ - !java.util.HashMap
+  id: 8
+  sizeInKb: 40
+  timeInSeconds: 2
+  interruptions: []
+- !java.util.HashMap
+  id: 9
+  sizeInKb: 17
+  timeInSeconds: 30
+  interruptions: []
+- !java.util.HashMap
+  id: 10
+  sizeInKb: 3
+  timeInSeconds: 2
+  interruptions: []

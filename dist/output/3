@@ -1,0 +1,544 @@
+Second: 1
+Try to alloc process 1.
+Process 1 moved from waiting to running.
+Try to alloc process 2.
+Process 2 moved from waiting to running.
+Try to alloc process 3.
+Try to alloc process 4.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 1 (20 Kb).
+12 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 2 (9 Kb).
+23 Kb are not being used in the partition.
+35 Kb in the memory are not being used.
+
+
+
+Second: 2
+Process 1, 4 seconds remain.
+Process 2, 6 seconds remain.
+Try to alloc process 3.
+Try to alloc process 4.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 1 (20 Kb).
+12 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 2 (9 Kb).
+23 Kb are not being used in the partition.
+35 Kb in the memory are not being used.
+
+
+
+Second: 3
+Process 1, 3 seconds remain.
+Process 2, 5 seconds remain.
+Process 2 moved from running to interrupted.
+Try to alloc process 3.
+Try to alloc process 4.
+Try to alloc process 5.
+Process 2 interrupted. 1 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 1 (20 Kb).
+12 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 2 (9 Kb).
+23 Kb are not being used in the partition.
+35 Kb in the memory are not being used.
+
+
+
+Second: 4
+Process 1, 2 seconds remain.
+Try to alloc process 3.
+Try to alloc process 4.
+Try to alloc process 5.
+Process 2 moved from interrupted to wating.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 1 (20 Kb).
+12 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 2 (9 Kb).
+23 Kb are not being used in the partition.
+35 Kb in the memory are not being used.
+
+
+
+Second: 5
+Process 1, 1 seconds remain.
+Try to alloc process 3.
+Try to alloc process 4.
+Try to alloc process 5.
+Try to alloc process 2.
+Process 2 moved from waiting to running.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 1 (20 Kb).
+12 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 2 (9 Kb).
+23 Kb are not being used in the partition.
+35 Kb in the memory are not being used.
+
+
+
+Second: 6
+Process 1, 0 seconds remain.
+Process 1 moved from running to finished.
+Process 2, 4 seconds remain.
+Try to alloc process 3.
+Process 3 moved from waiting to running.
+Try to alloc process 4.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 2 (9 Kb).
+23 Kb are not being used in the partition.
+50 Kb in the memory are not being used.
+
+
+
+Second: 7
+Process 2, 3 seconds remain.
+Process 3, 17 seconds remain.
+Try to alloc process 4.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 2 (9 Kb).
+23 Kb are not being used in the partition.
+50 Kb in the memory are not being used.
+
+
+
+Second: 8
+Process 2, 2 seconds remain.
+Process 2 moved from running to interrupted.
+Process 3, 16 seconds remain.
+Try to alloc process 4.
+Try to alloc process 5.
+Process 2 interrupted. 1 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 2 (9 Kb).
+23 Kb are not being used in the partition.
+50 Kb in the memory are not being used.
+
+
+
+Second: 9
+Process 3, 15 seconds remain.
+Try to alloc process 4.
+Try to alloc process 5.
+Process 2 moved from interrupted to wating.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 2 (9 Kb).
+23 Kb are not being used in the partition.
+50 Kb in the memory are not being used.
+
+
+
+Second: 10
+Process 3, 14 seconds remain.
+Try to alloc process 4.
+Try to alloc process 5.
+Try to alloc process 2.
+Process 2 moved from waiting to running.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 2 (9 Kb).
+23 Kb are not being used in the partition.
+50 Kb in the memory are not being used.
+
+
+
+Second: 11
+Process 3, 13 seconds remain.
+Process 2, 1 seconds remain.
+Try to alloc process 4.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 2 (9 Kb).
+23 Kb are not being used in the partition.
+50 Kb in the memory are not being used.
+
+
+
+Second: 12
+Process 3, 12 seconds remain.
+Process 2, 0 seconds remain.
+Process 2 moved from running to finished.
+Try to alloc process 4.
+Process 4 moved from waiting to running.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+56 Kb in the memory are not being used.
+
+
+
+Second: 13
+Process 3, 11 seconds remain.
+Process 4, 36 seconds remain.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+56 Kb in the memory are not being used.
+
+
+
+Second: 14
+Process 3, 10 seconds remain.
+Process 4, 35 seconds remain.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+56 Kb in the memory are not being used.
+
+
+
+Second: 15
+Process 3, 9 seconds remain.
+Process 4, 34 seconds remain.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+56 Kb in the memory are not being used.
+
+
+
+Second: 16
+Process 3, 8 seconds remain.
+Process 4, 33 seconds remain.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+56 Kb in the memory are not being used.
+
+
+
+Second: 17
+Process 3, 7 seconds remain.
+Process 4, 32 seconds remain.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+56 Kb in the memory are not being used.
+
+
+
+Second: 18
+Process 3, 6 seconds remain.
+Process 4, 31 seconds remain.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+56 Kb in the memory are not being used.
+
+
+
+Second: 19
+Process 3, 5 seconds remain.
+Process 4, 30 seconds remain.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+56 Kb in the memory are not being used.
+
+
+
+Second: 20
+Process 3, 4 seconds remain.
+Process 4, 29 seconds remain.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+56 Kb in the memory are not being used.
+
+
+
+Second: 21
+Process 3, 3 seconds remain.
+Process 4, 28 seconds remain.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+56 Kb in the memory are not being used.
+
+
+
+Second: 22
+Process 3, 2 seconds remain.
+Process 3 moved from running to interrupted.
+Process 4, 27 seconds remain.
+Try to alloc process 5.
+Process 3 interrupted. 1 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+56 Kb in the memory are not being used.
+
+
+
+Second: 23
+Process 4, 26 seconds remain.
+Try to alloc process 5.
+Process 3 moved from interrupted to wating.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+56 Kb in the memory are not being used.
+
+
+
+Second: 24
+Process 4, 25 seconds remain.
+Try to alloc process 5.
+Try to alloc process 3.
+Process 3 moved from waiting to running.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+56 Kb in the memory are not being used.
+
+
+
+Second: 25
+Process 4, 24 seconds remain.
+Process 3, 1 seconds remain.
+Try to alloc process 5.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 3 (5 Kb).
+27 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+56 Kb in the memory are not being used.
+
+
+
+Second: 26
+Process 4, 23 seconds remain.
+Process 3, 0 seconds remain.
+Process 3 moved from running to finished.
+Try to alloc process 5.
+Process 5 moved from waiting to running.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
+Second: 27
+Process 4, 22 seconds remain.
+Process 5, 18 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
+Second: 28
+Process 4, 21 seconds remain.
+Process 5, 17 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
+Second: 29
+Process 4, 20 seconds remain.
+Process 5, 16 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
+Second: 30
+Process 4, 19 seconds remain.
+Process 5, 15 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
+Second: 31
+Process 4, 18 seconds remain.
+Process 5, 14 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
+Second: 32
+Process 4, 17 seconds remain.
+Process 5, 13 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
+Second: 33
+Process 4, 16 seconds remain.
+Process 5, 12 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
+Second: 34
+Process 4, 15 seconds remain.
+Process 5, 11 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
+Second: 35
+Process 4, 14 seconds remain.
+Process 5, 10 seconds remain.
+Process 5 moved from running to interrupted.
+Process 5 interrupted. 1 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
+Second: 36
+Process 4, 13 seconds remain.
+Process 5 moved from interrupted to wating.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
+Second: 37
+Process 4, 12 seconds remain.
+Try to alloc process 5.
+Process 5 moved from waiting to running.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
+Second: 38
+Process 4, 11 seconds remain.
+Process 5, 9 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
+Second: 39
+Process 4, 10 seconds remain.
+Process 5, 8 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
+Second: 40
+Process 4, 9 seconds remain.
+Process 5, 7 seconds remain.
+The memory (64 Kb) have 2 positions.
+The position 0 (32 Kb) has process 5 (12 Kb).
+20 Kb are not being used in the partition.
+The position 1 (32 Kb) has process 4 (3 Kb).
+29 Kb are not being used in the partition.
+49 Kb in the memory are not being used.
+
+
+
