@@ -36,7 +36,7 @@ public class ProcessQueuesWindow extends JFrame {
 	private void initialize() {
 		this.setSize(300, 200);
 		this.setContentPane(getJContentPane());
-		this.setTitle("JFrame");
+		this.setTitle("Memory Simulator (Processes)");
 	}
 
 	/**
