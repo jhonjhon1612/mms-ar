@@ -1,6 +1,7 @@
 package ar.uba.dc.so.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -13,6 +14,8 @@ import java.io.File;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 
+import ar.uba.dc.so.domain.ProcessStatusChangeEvent;
+import ar.uba.dc.so.domain.ProcessStatusChangeListener;
 import ar.uba.dc.so.gui.component.ComboBoxOption;
 import ar.uba.dc.so.gui.component.IntegerTextField;
 import ar.uba.dc.so.simulator.CmdLineMode;
@@ -47,11 +50,16 @@ public class ControlWindow extends JFrame {
 	private JProgressBar jProgressBar = null;
 	private JLabel jInfoLabel = null;
 
+	private ProcessQueuesWindow pw;
+	
 	/**
 	 * This is the default constructor
 	 */
-	public ControlWindow() {
+	public ControlWindow(ProcessQueuesWindow pw) {
 		super();
+		
+		this.pw = pw;
+		
 		initialize();
 	}
 
@@ -122,6 +130,8 @@ public class ControlWindow extends JFrame {
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Swapping", 2));
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Fixed Partition", 3));
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Variable Partition", -1));
+			
+			jMemoryTypeComboBox.setSelectedIndex(1);
 		}
 		return jMemoryTypeComboBox;
 	}
@@ -135,6 +145,7 @@ public class ControlWindow extends JFrame {
 		if (jMemorySizeTextField == null) {
 			jMemorySizeTextField = new IntegerTextField();
 			jMemorySizeTextField.setBounds(new Rectangle(115, 50, 21, 20));
+			jMemorySizeTextField.setText("300");
 		}
 		return jMemorySizeTextField;
 	}
@@ -148,6 +159,7 @@ public class ControlWindow extends JFrame {
 		if (jTimeToSimulateTextField == null) {
 			jTimeToSimulateTextField = new IntegerTextField();
 			jTimeToSimulateTextField.setBounds(new Rectangle(171, 77, 22, 20));
+			jTimeToSimulateTextField.setText("30");
 		}
 		return jTimeToSimulateTextField;
 	}
@@ -257,20 +269,72 @@ public class ControlWindow extends JFrame {
 			jStartSimulationButton.setText("Start");
 			jStartSimulationButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					Integer memoryType = ((ComboBoxOption<Integer>) jMemoryTypeComboBox.getSelectedItem()).getValue();
-					if(memoryType == 0)
+					Integer memType = ((ComboBoxOption<Integer>) jMemoryTypeComboBox.getSelectedItem()).getValue();
+					if(memType == 0)
 						return;
-					else if (memoryType == -1) {
-						memoryType = ((ComboBoxOption<Integer>) jAlgorithmComboBox.getSelectedItem()).getValue();
+					else if (memType == -1) {
+						memType = ((ComboBoxOption<Integer>) jAlgorithmComboBox.getSelectedItem()).getValue();
 					}
 					
-					Integer memorySizeInKb = Integer.parseInt(jMemorySizeTextField.getText());
-					Integer runForInSeconds = Integer.parseInt(jTimeToSimulateTextField.getText());
-					String processesFile = jProcessFileTextField.getText();
-					Integer fixedPartitionSizeInKb = 1;
+					final Integer memorySizeInKb = Integer.parseInt(jMemorySizeTextField.getText());
+					final Integer runForInSeconds = Integer.parseInt(jTimeToSimulateTextField.getText());
+					final String processesFile = jProcessFileTextField.getText();
+					final Integer fixedPartitionSizeInKb = 1;
 					
 					try {
-						CmdLineMode.run(memoryType, memorySizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile);
+						final ProcessStatusChangeListener pscl = new ProcessStatusChangeListener() {
+							
+							@Override
+							public void statusChanged(ProcessStatusChangeEvent e) {
+								System.out.println("Process " + e.getProcess().id + " moved from " + e.getPreviousState() + " to " + e.getNextState());
+								
+								if(e.getPreviousState() != null) {
+									switch(e.getPreviousState()) {
+									case WAITING:
+										pw.removeProcessWaiting(e.getProcess());
+										break;
+									case RUNNING:
+										pw.removeProcessRunning(e.getProcess());
+										break;
+									case INTERRUPTED:
+										pw.removeProcessInterrupted(e.getProcess());
+										break;
+									case FINISHED:
+										pw.removeProcessFinished(e.getProcess());
+										break;
+									}
+								}
+								
+								switch(e.getNextState()) {
+								case WAITING:
+									pw.addProcessWaiting(e.getProcess());
+									break;
+								case RUNNING:
+									pw.addProcessRunning(e.getProcess());
+									break;
+								case INTERRUPTED:
+									pw.addProcessInterrupted(e.getProcess());
+									break;
+								case FINISHED:
+									pw.addProcessFinished(e.getProcess());
+									break;
+								}
+							}
+						};
+						
+						// Launch a new thread so GUI is not affected
+						final Integer memoryType = memType;
+						Thread t = new Thread() {
+							public void run() {
+								try {
+									CmdLineMode.run(pscl, memoryType, memorySizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile);
+								}
+								catch(Exception e) {
+									System.err.println(e);
+								}
+							}
+						};
+						t.start();
 					}
 					catch (Exception ex) {
 						System.err.println(ex);
