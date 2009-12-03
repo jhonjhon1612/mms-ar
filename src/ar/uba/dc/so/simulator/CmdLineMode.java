@@ -2,9 +2,9 @@ package ar.uba.dc.so.simulator;
 
 import java.io.File;
 
-import ar.uba.dc.so.domain.ProcessStatusChangeEvent;
 import ar.uba.dc.so.domain.ProcessStatusChangeListener;
 import ar.uba.dc.so.domain.Scheduler;
+import ar.uba.dc.so.domain.SchedulerStepListener;
 import ar.uba.dc.so.memoryManagement.Memory;
 import ar.uba.dc.so.memoryManagement.MemoryFixedPartition;
 import ar.uba.dc.so.memoryManagement.MemorySimpleContiguous;
@@ -49,10 +49,10 @@ public class CmdLineMode {
 	}
 	
 	public static void run(Integer memoryType, Integer memorySizeInKb, Integer fixedPartitionSizeInKb, Integer runForInSeconds, String processesFile) throws Exception {
-		run(null, memoryType, memorySizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile);
+		run(1, null, null, memoryType, memorySizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile);
 	}	
 	
-	public static void run(ProcessStatusChangeListener pscl, Integer memoryType, Integer memorySizeInKb, Integer fixedPartitionSizeInKb, Integer runForInSeconds, String processesFile) throws Exception {
+	public static void run(int speedFactor, SchedulerStepListener ssl, ProcessStatusChangeListener pscl, Integer memoryType, Integer memorySizeInKb, Integer fixedPartitionSizeInKb, Integer runForInSeconds, String processesFile) throws Exception {
 		if (
 		(memoryType == null || memorySizeInKb == null || runForInSeconds == null || processesFile == null) || (memoryType == 3 && fixedPartitionSizeInKb == null) || 
 		!(new File(processesFile)).exists() || 
@@ -98,12 +98,14 @@ public class CmdLineMode {
 		Scheduler scheduler = new Scheduler(memory);
 		if(pscl != null)
 			scheduler.addProcessStatusChangeListener(pscl);
+		if(ssl != null)
+			scheduler.addSchedulerStepListener(ssl);
 		scheduler.initialize(processesFile);
 		
 		try {
 			for (int i = 0; i < runForInSeconds; i++) {
 				scheduler.incrementTime();
-				Thread.sleep(1000); // 1000 ms = 1s
+				Thread.sleep(2000 / speedFactor); // 1000 ms = 1s
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

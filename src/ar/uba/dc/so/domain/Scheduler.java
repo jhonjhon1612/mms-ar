@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import javax.swing.event.EventListenerList;
 
@@ -17,12 +16,13 @@ import org.ho.yaml.Yaml;
 import ar.uba.dc.so.memoryManagement.Memory;
 
 public class Scheduler {
-	private static final String DEFAULT_PPROCESSES_FILE_NAME = "/Users/damianburszytn/Code/SOMS/resources/processes.yml";
+	public static String DEFAULT_PPROCESSES_FILE_NAME = "/Users/Ignacio/workspace/OSMMS/resources/processes.yml";
 	private final Memory memory;
 	public static Map<Integer, Process> processes = new HashMap<Integer, Process>();
 
 	// Listeners
 	private EventListenerList processStatusChange = new EventListenerList();
+	private EventListenerList schedulerStep = new EventListenerList();
 	
 	private List<Process> processesWaiting = new ArrayList<Process>();
 	private List<Process> processesRunning = new ArrayList<Process>();
@@ -128,7 +128,9 @@ public class Scheduler {
 			System.out.println("Idle.");
 		memory.writeLog();
 		System.out.println("\n\n");
-		Thread.sleep(1000); // 1000 ms = 1 s
+		
+		// Fire event
+		fireSchedulerStepEvent(new SchedulerStepEvent(this, 1));
 	}
 	
 	
@@ -147,6 +149,24 @@ public class Scheduler {
 	          {
 	               // pass the event to the listeners event dispatch method
 	                ((ProcessStatusChangeListener)listeners[i+1]).statusChanged(e);
+	          }            
+	     }
+	}
+	
+	public void addSchedulerStepListener(SchedulerStepListener listener) {
+		schedulerStep.add(SchedulerStepListener.class, listener);
+	}
+	
+	protected void fireSchedulerStepEvent(SchedulerStepEvent e) {
+		Object[] listeners =  schedulerStep.getListenerList();
+	     // loop through each listener and pass on the event if needed
+	     Integer numListeners = listeners.length;
+	     for (int i = 0; i<numListeners; i+=2) 
+	     {
+	          if (listeners[i]==SchedulerStepListener.class) 
+	          {
+	               // pass the event to the listeners event dispatch method
+	                ((SchedulerStepListener)listeners[i+1]).schedullerStep(e);
 	          }            
 	     }
 	}
