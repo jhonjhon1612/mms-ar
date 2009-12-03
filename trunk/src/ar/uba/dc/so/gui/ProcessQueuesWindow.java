@@ -60,7 +60,7 @@ public class ProcessQueuesWindow extends JFrame {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(300, 407);
+		this.setSize(300, 548);
 		this.setContentPane(getJContentPane());
 		this.setTitle("Memory Simulator (Processes)");
 	}
@@ -104,7 +104,7 @@ public class ProcessQueuesWindow extends JFrame {
 		if (jSplitPane1 == null) {
 			jSplitPane1 = new JSplitPane();
 			jSplitPane1.setOrientation(JSplitPane.VERTICAL_SPLIT);
-			jSplitPane1.setDividerLocation(150);
+			jSplitPane1.setDividerLocation(100);
 			jSplitPane1.setBottomComponent(getJScrollPane1());
 			jSplitPane1.setTopComponent(getJScrollPane());
 			

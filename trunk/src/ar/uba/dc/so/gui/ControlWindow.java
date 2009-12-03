@@ -28,9 +28,11 @@ import javax.swing.JSplitPane;
 import javax.swing.JProgressBar;
 import java.awt.Color;
 import javax.swing.JSlider;
+import java.awt.Font;
 
 public class ControlWindow extends JFrame {
-
+	private Thread tSimulator;
+	
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
 	private JComboBox jMemoryTypeComboBox = null;
@@ -75,7 +77,7 @@ public class ControlWindow extends JFrame {
 		this.setContentPane(getJContentPane());
 		this.setTitle("Memory Simulator (Control Window)");
 		this.setResizable(false);
-		this.setBounds(new Rectangle(300, 0, 370, 289));
+		this.setBounds(new Rectangle(300, 0, 370, 315));
 	}
 
 	/**
@@ -242,7 +244,7 @@ public class ControlWindow extends JFrame {
 			jInfoLabel.setText("Status: simulating; Fragmentation index: 2%");
 			jProgressPanel = new JPanel();
 			jProgressPanel.setLayout(new BorderLayout());
-			jProgressPanel.setBounds(new Rectangle(5, 178, 355, 79));
+			jProgressPanel.setBounds(new Rectangle(3, 208, 355, 79));
 			jProgressPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 			jProgressPanel.add(getJSplitPane(), BorderLayout.NORTH);
 			jProgressPanel.add(getJProgressBar(), BorderLayout.CENTER);
@@ -338,22 +340,31 @@ public class ControlWindow extends JFrame {
 							@Override
 							public void schedullerStep(SchedulerStepEvent e) {
 								cw.getJProgressBar().setValue(cw.getJProgressBar().getValue()+1);
+								cw.getJProgressBar().setString("Elapsed simulation time: " + cw.getJProgressBar().getValue() + "s");
 							}
 						};
 						
 						// Launch a new thread so GUI is not affected
 						final Integer memoryType = memType;
-						Thread t = new Thread() {
-							public void run() {
-								try {
-									CmdLineMode.run(cw.getJSpeedFactorSlider().getValue(), ssl, pscl, memoryType, memorySizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile);
+						if(tSimulator == null) {
+							tSimulator = new Thread() {
+								public void run() {
+									try {
+										CmdLineMode.run(cw.getJSpeedFactorSlider().getValue(), ssl, pscl, memoryType, memorySizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile);
+									}
+									catch(Exception e) {
+										System.err.println(e);
+									}
 								}
-								catch(Exception e) {
-									System.err.println(e);
-								}
-							}
-						};
-						t.start();
+							};
+							tSimulator.start();
+						}
+						else {
+							tSimulator.resume();
+						}
+						
+						getJStartSimulationButton().setEnabled(false);
+						getJStopSimulationButton().setEnabled(true);
 					}
 					catch (Exception ex) {
 						System.err.println(ex);
@@ -373,6 +384,15 @@ public class ControlWindow extends JFrame {
 		if (jStopSimulationButton == null) {
 			jStopSimulationButton = new JButton();
 			jStopSimulationButton.setText("Stop");
+			jStopSimulationButton.setEnabled(false);
+			jStopSimulationButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					tSimulator.suspend();
+					
+					getJStartSimulationButton().setEnabled(true);
+					getJStopSimulationButton().setEnabled(false);
+				}
+			});
 		}
 		return jStopSimulationButton;
 	}
@@ -386,7 +406,11 @@ public class ControlWindow extends JFrame {
 		if (jProgressBar == null) {
 			jProgressBar = new JProgressBar();
 			jProgressBar.setValue(0);
-			jProgressBar.setForeground(new Color(51, 51, 255));
+			jProgressBar.setStringPainted(true);
+			jProgressBar.setString("0s");
+			jProgressBar.setBackground(new Color(51, 255, 102));
+			jProgressBar.setFont(new Font("Dialog", Font.BOLD, 12));
+			jProgressBar.setForeground(new Color(51, 102, 255));
 		}
 		return jProgressBar;
 	}
@@ -399,9 +423,11 @@ public class ControlWindow extends JFrame {
 	private JSlider getJSpeedFactorSlider() {
 		if (jSpeedFactorSlider == null) {
 			jSpeedFactorSlider = new JSlider();
-			jSpeedFactorSlider.setBounds(new Rectangle(8, 159, 352, 16));
+			jSpeedFactorSlider.setBounds(new Rectangle(8, 159, 352, 45));
 			jSpeedFactorSlider.setMaximum(20);
 			jSpeedFactorSlider.setValue(1);
+			jSpeedFactorSlider.setMinorTickSpacing(1);
+			jSpeedFactorSlider.setPaintTicks(true);
 			jSpeedFactorSlider.setMinimum(1);
 		}
 		return jSpeedFactorSlider;
