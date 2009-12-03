@@ -9,7 +9,7 @@ import ar.uba.dc.so.gui.ProcessQueuesWindow;
 public class GraphicMode {
 	public static void run() {
 		ProcessQueuesWindow pw = new ProcessQueuesWindow();
-		ControlWindow cw = new ControlWindow();
+		ControlWindow cw = new ControlWindow(pw);
 		
 		cw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

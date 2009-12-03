@@ -2,6 +2,8 @@ package ar.uba.dc.so.simulator;
 
 import java.io.File;
 
+import ar.uba.dc.so.domain.ProcessStatusChangeEvent;
+import ar.uba.dc.so.domain.ProcessStatusChangeListener;
 import ar.uba.dc.so.domain.Scheduler;
 import ar.uba.dc.so.memoryManagement.Memory;
 import ar.uba.dc.so.memoryManagement.MemoryFixedPartition;
@@ -47,6 +49,10 @@ public class CmdLineMode {
 	}
 	
 	public static void run(Integer memoryType, Integer memorySizeInKb, Integer fixedPartitionSizeInKb, Integer runForInSeconds, String processesFile) throws Exception {
+		run(null, memoryType, memorySizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile);
+	}	
+	
+	public static void run(ProcessStatusChangeListener pscl, Integer memoryType, Integer memorySizeInKb, Integer fixedPartitionSizeInKb, Integer runForInSeconds, String processesFile) throws Exception {
 		if (
 		(memoryType == null || memorySizeInKb == null || runForInSeconds == null || processesFile == null) || (memoryType == 3 && fixedPartitionSizeInKb == null) || 
 		!(new File(processesFile)).exists() || 
@@ -89,12 +95,16 @@ public class CmdLineMode {
 				memory = new MemoryVariablePartitionWorstCompact(memorySizeInKb);
 				break;
 		}
-		Scheduler scheduler = new Scheduler(processesFile, memory);
+		Scheduler scheduler = new Scheduler(memory);
+		if(pscl != null)
+			scheduler.addProcessStatusChangeListener(pscl);
+		scheduler.initialize(processesFile);
 		
 		try {
-			for (int i = 0; i < runForInSeconds; i++)
+			for (int i = 0; i < runForInSeconds; i++) {
 				scheduler.incrementTime();
 				Thread.sleep(1000); // 1000 ms = 1s
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
