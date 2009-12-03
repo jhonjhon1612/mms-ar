@@ -1,12 +1,10 @@
 package ar.uba.dc.so.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
-import java.awt.GridLayout;
 import javax.swing.JComboBox;
 import java.awt.Rectangle;
 import java.io.File;
@@ -16,17 +14,20 @@ import javax.swing.JLabel;
 
 import ar.uba.dc.so.domain.ProcessStatusChangeEvent;
 import ar.uba.dc.so.domain.ProcessStatusChangeListener;
+import ar.uba.dc.so.domain.Scheduler;
+import ar.uba.dc.so.domain.SchedulerStepEvent;
+import ar.uba.dc.so.domain.SchedulerStepListener;
 import ar.uba.dc.so.gui.component.ComboBoxOption;
 import ar.uba.dc.so.gui.component.IntegerTextField;
 import ar.uba.dc.so.simulator.CmdLineMode;
 
 import javax.swing.JButton;
-import java.awt.GridBagLayout;
 import javax.swing.BorderFactory;
 import javax.swing.border.BevelBorder;
 import javax.swing.JSplitPane;
 import javax.swing.JProgressBar;
 import java.awt.Color;
+import javax.swing.JSlider;
 
 public class ControlWindow extends JFrame {
 
@@ -51,6 +52,8 @@ public class ControlWindow extends JFrame {
 	private JLabel jInfoLabel = null;
 
 	private ProcessQueuesWindow pw;
+	private JSlider jSpeedFactorSlider = null;
+	private JLabel jSpeedLabel = null;
 	
 	/**
 	 * This is the default constructor
@@ -72,7 +75,7 @@ public class ControlWindow extends JFrame {
 		this.setContentPane(getJContentPane());
 		this.setTitle("Memory Simulator (Control Window)");
 		this.setResizable(false);
-		this.setBounds(new Rectangle(300, 0, 370, 254));
+		this.setBounds(new Rectangle(300, 0, 370, 289));
 	}
 
 	/**
@@ -82,6 +85,9 @@ public class ControlWindow extends JFrame {
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
+			jSpeedLabel = new JLabel();
+			jSpeedLabel.setBounds(new Rectangle(7, 142, 356, 16));
+			jSpeedLabel.setText("Simulation Speed (ranging from 2s per step to 100ms per step)");
 			jProcessFileLabel = new JLabel();
 			jProcessFileLabel.setBounds(new Rectangle(7, 102, 155, 16));
 			jProcessFileLabel.setText("Processes File");
@@ -111,6 +117,8 @@ public class ControlWindow extends JFrame {
 			jContentPane.add(getJFileChooseButton(), null);
 			jContentPane.add(jProcessFileLabel, null);
 			jContentPane.add(getJProgressPanel(), null);
+			jContentPane.add(getJSpeedFactorSlider(), null);
+			jContentPane.add(jSpeedLabel, null);
 		}
 		return jContentPane;
 	}
@@ -208,7 +216,7 @@ public class ControlWindow extends JFrame {
 			jFileChooseButton = new JButton();
 			jFileChooseButton.setBounds(new Rectangle(214, 119, 82, 20));
 			jFileChooseButton.setText("Choose");
-			final JFileChooser fc = new JFileChooser();
+			final JFileChooser fc = new JFileChooser(new File(Scheduler.DEFAULT_PPROCESSES_FILE_NAME));
 			jFileChooseButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					int retVal = fc.showOpenDialog(ControlWindow.this);
@@ -234,7 +242,7 @@ public class ControlWindow extends JFrame {
 			jInfoLabel.setText("Status: simulating; Fragmentation index: 2%");
 			jProgressPanel = new JPanel();
 			jProgressPanel.setLayout(new BorderLayout());
-			jProgressPanel.setBounds(new Rectangle(4, 150, 355, 79));
+			jProgressPanel.setBounds(new Rectangle(5, 178, 355, 79));
 			jProgressPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 			jProgressPanel.add(getJSplitPane(), BorderLayout.NORTH);
 			jProgressPanel.add(getJProgressBar(), BorderLayout.CENTER);
@@ -267,6 +275,7 @@ public class ControlWindow extends JFrame {
 		if (jStartSimulationButton == null) {
 			jStartSimulationButton = new JButton();
 			jStartSimulationButton.setText("Start");
+			final ControlWindow cw = this;
 			jStartSimulationButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					Integer memType = ((ComboBoxOption<Integer>) jMemoryTypeComboBox.getSelectedItem()).getValue();
@@ -280,6 +289,8 @@ public class ControlWindow extends JFrame {
 					final Integer runForInSeconds = Integer.parseInt(jTimeToSimulateTextField.getText());
 					final String processesFile = jProcessFileTextField.getText();
 					final Integer fixedPartitionSizeInKb = 1;
+					
+					cw.getJProgressBar().setMaximum(runForInSeconds);
 					
 					try {
 						final ProcessStatusChangeListener pscl = new ProcessStatusChangeListener() {
@@ -322,12 +333,20 @@ public class ControlWindow extends JFrame {
 							}
 						};
 						
+						final SchedulerStepListener ssl = new SchedulerStepListener() {
+							
+							@Override
+							public void schedullerStep(SchedulerStepEvent e) {
+								cw.getJProgressBar().setValue(cw.getJProgressBar().getValue()+1);
+							}
+						};
+						
 						// Launch a new thread so GUI is not affected
 						final Integer memoryType = memType;
 						Thread t = new Thread() {
 							public void run() {
 								try {
-									CmdLineMode.run(pscl, memoryType, memorySizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile);
+									CmdLineMode.run(cw.getJSpeedFactorSlider().getValue(), ssl, pscl, memoryType, memorySizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile);
 								}
 								catch(Exception e) {
 									System.err.println(e);
@@ -366,10 +385,26 @@ public class ControlWindow extends JFrame {
 	private JProgressBar getJProgressBar() {
 		if (jProgressBar == null) {
 			jProgressBar = new JProgressBar();
-			jProgressBar.setValue(50);
+			jProgressBar.setValue(0);
 			jProgressBar.setForeground(new Color(51, 51, 255));
 		}
 		return jProgressBar;
+	}
+
+	/**
+	 * This method initializes jSpeedFactorSlider	
+	 * 	
+	 * @return javax.swing.JSlider	
+	 */
+	private JSlider getJSpeedFactorSlider() {
+		if (jSpeedFactorSlider == null) {
+			jSpeedFactorSlider = new JSlider();
+			jSpeedFactorSlider.setBounds(new Rectangle(8, 159, 352, 16));
+			jSpeedFactorSlider.setMaximum(20);
+			jSpeedFactorSlider.setValue(1);
+			jSpeedFactorSlider.setMinimum(1);
+		}
+		return jSpeedFactorSlider;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"
