@@ -66,7 +66,7 @@ public class Scheduler {
 		return timeInSeconds;
 	}
 
-	public final void incrementTime() throws Exception {
+	synchronized public final void incrementTime() throws Exception {
 		timeInSeconds++;
 		System.out.println("Second: " + timeInSeconds);
 		for (int i = 0; i < processesRunning.size(); i++) {
