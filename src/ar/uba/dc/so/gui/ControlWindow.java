@@ -77,7 +77,7 @@ public class ControlWindow extends JFrame {
 		this.setContentPane(getJContentPane());
 		this.setTitle("Memory Simulator (Control Window)");
 		this.setResizable(false);
-		this.setBounds(new Rectangle(300, 0, 370, 315));
+		this.setBounds(new Rectangle(350, 5, 370, 315));
 	}
 
 	/**
