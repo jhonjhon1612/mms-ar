@@ -223,7 +223,7 @@ public class ProcessQueuesWindow extends JFrame {
 		Object v1 = graph.insertVertex(parent, idString+Integer.toString(p.id), new Integer(p.id), 0, 5, 20, 20);
 		
 		if(lastAdded != null)
-			graph.insertEdge(parent, "Edge", "Edge", lastAdded, v1);
+			graph.insertEdge(parent, "Edge", "", lastAdded, v1);
 		
 		switch(state) {
 		case WAITING:
