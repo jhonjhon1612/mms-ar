@@ -10,6 +10,8 @@ import ar.uba.dc.so.domain.Scheduler;
 
 public abstract class Memory {
 	public final int sizeInKb;
+	protected int usedSizeInKb = 0;
+	
 	protected List<Partition> partitions = new ArrayList<Partition>();
 	
 	public Memory(int sizeInKb) {
@@ -21,9 +23,23 @@ public abstract class Memory {
 			Partition partition = partitions.get(i);
 			if (!partition.isEmpty() && partition.getProcessId() == processId) {
 				partition.clear();
+				
+				// Le resto el tamaño de la partición usada
+				// acoto por abajo para cuando la partición es una sola
+				usedSizeInKb -= partition.sizeInKb;
+				usedSizeInKb = (usedSizeInKb < 0)?0:usedSizeInKb;
+				
 				break;
 			}
 		}
+	}
+	
+	public int getFreeSize() {
+		return sizeInKb - getAllocedSize();
+	}
+	
+	public int getAllocedSize() {
+		return usedSizeInKb;
 	}
 	
 	public abstract boolean alloc(Process process);

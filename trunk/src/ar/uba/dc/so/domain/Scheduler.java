@@ -170,4 +170,8 @@ public class Scheduler {
 	          }            
 	     }
 	}
+	
+	public final Memory getMemory() {
+		return memory;
+	}
 }
