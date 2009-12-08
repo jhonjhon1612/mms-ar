@@ -18,6 +18,7 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import javax.swing.JScrollPane;
 import java.awt.Dimension;
+import javax.swing.WindowConstants;
 
 public class ProcessQueuesWindow extends JFrame {
 
@@ -61,6 +62,7 @@ public class ProcessQueuesWindow extends JFrame {
 	 */
 	private void initialize() {
 		this.setSize(300, 548);
+		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.setContentPane(getJContentPane());
 		this.setTitle("Memory Simulator (Processes)");
 	}
@@ -339,7 +341,7 @@ public class ProcessQueuesWindow extends JFrame {
 				target = (mxCell) edge0.getTarget();
 			}
 			
-			graph.insertEdge(parent, "Edge", "Edge", source, target);
+			graph.insertEdge(parent, "Edge", "", source, target);
 		}
 		graph.removeCells(edges);
 		graph.getModel().remove(cell);

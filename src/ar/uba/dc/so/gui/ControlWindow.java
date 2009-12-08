@@ -19,6 +19,7 @@ import ar.uba.dc.so.domain.SchedulerStepEvent;
 import ar.uba.dc.so.domain.SchedulerStepListener;
 import ar.uba.dc.so.gui.component.ComboBoxOption;
 import ar.uba.dc.so.gui.component.IntegerTextField;
+import ar.uba.dc.so.memoryManagement.Memory;
 import ar.uba.dc.so.simulator.CmdLineMode;
 
 import javax.swing.JButton;
@@ -29,6 +30,7 @@ import javax.swing.JProgressBar;
 import java.awt.Color;
 import javax.swing.JSlider;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 
 public class ControlWindow extends JFrame {
 	private Thread tSimulator;
@@ -56,6 +58,14 @@ public class ControlWindow extends JFrame {
 	private ProcessQueuesWindow pw;
 	private JSlider jSpeedFactorSlider = null;
 	private JLabel jSpeedLabel = null;
+
+	private JPanel jPanel = null;
+
+	private JProgressBar jMemoryUsageProgressBar = null;
+
+	private IntegerTextField jPartitionSize = null;
+
+	private JLabel jPartitionSizeLabel = null;
 	
 	/**
 	 * This is the default constructor
@@ -77,7 +87,7 @@ public class ControlWindow extends JFrame {
 		this.setContentPane(getJContentPane());
 		this.setTitle("Memory Simulator (Control Window)");
 		this.setResizable(false);
-		this.setBounds(new Rectangle(350, 5, 370, 315));
+		this.setBounds(new Rectangle(300, 0, 450, 315));
 	}
 
 	/**
@@ -87,6 +97,9 @@ public class ControlWindow extends JFrame {
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
+			jPartitionSizeLabel = new JLabel();
+			jPartitionSizeLabel.setBounds(new Rectangle(208, 52, 110, 16));
+			jPartitionSizeLabel.setText("Partition size (KB)");
 			jSpeedLabel = new JLabel();
 			jSpeedLabel.setBounds(new Rectangle(7, 142, 356, 16));
 			jSpeedLabel.setText("Simulation Speed (ranging from 2s per step to 100ms per step)");
@@ -121,6 +134,9 @@ public class ControlWindow extends JFrame {
 			jContentPane.add(getJProgressPanel(), null);
 			jContentPane.add(getJSpeedFactorSlider(), null);
 			jContentPane.add(jSpeedLabel, null);
+			jContentPane.add(getJPanel(), null);
+			jContentPane.add(getJPartitionSize(), null);
+			jContentPane.add(jPartitionSizeLabel, null);
 		}
 		return jContentPane;
 	}
@@ -290,9 +306,12 @@ public class ControlWindow extends JFrame {
 					final Integer memorySizeInKb = Integer.parseInt(jMemorySizeTextField.getText());
 					final Integer runForInSeconds = Integer.parseInt(jTimeToSimulateTextField.getText());
 					final String processesFile = jProcessFileTextField.getText();
-					final Integer fixedPartitionSizeInKb = 1;
+					final Integer fixedPartitionSizeInKb = Integer.parseInt(getJPartitionSize().getText());
 					
 					cw.getJProgressBar().setMaximum(runForInSeconds);
+					cw.getJMemoryUsageProgressBar().setMaximum(memorySizeInKb);
+					cw.getJMemoryUsageProgressBar().setValue(0);
+					cw.getJMemoryUsageProgressBar().setString( "0KB / " + memorySizeInKb + "KB");
 					
 					try {
 						final ProcessStatusChangeListener pscl = new ProcessStatusChangeListener() {
@@ -339,8 +358,15 @@ public class ControlWindow extends JFrame {
 							
 							@Override
 							public void schedullerStep(SchedulerStepEvent e) {
+								// Actualizo progreso en la simulación
 								cw.getJProgressBar().setValue(cw.getJProgressBar().getValue()+1);
 								cw.getJProgressBar().setString("Elapsed simulation time: " + cw.getJProgressBar().getValue() + "s");
+								
+								// Actualizo el uso de memoria
+								Scheduler s = (Scheduler) e.getSource();
+								Memory m = s.getMemory();
+								cw.getJMemoryUsageProgressBar().setValue(m.getAllocedSize());
+								cw.getJMemoryUsageProgressBar().setString(m.getAllocedSize() + "KB / " + m.sizeInKb + "KB");
 							}
 						};
 						
@@ -431,6 +457,52 @@ public class ControlWindow extends JFrame {
 			jSpeedFactorSlider.setMinimum(1);
 		}
 		return jSpeedFactorSlider;
+	}
+
+	/**
+	 * This method initializes jPanel	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private JPanel getJPanel() {
+		if (jPanel == null) {
+			jPanel = new JPanel();
+			jPanel.setLayout(null);
+			jPanel.setBounds(new Rectangle(365, 5, 74, 280));
+			jPanel.add(getJMemoryUsageProgressBar(), null);
+		}
+		return jPanel;
+	}
+
+	/**
+	 * This method initializes jMemoryUsageProgressBar	
+	 * 	
+	 * @return javax.swing.JProgressBar	
+	 */
+	private JProgressBar getJMemoryUsageProgressBar() {
+		if (jMemoryUsageProgressBar == null) {
+			jMemoryUsageProgressBar = new JProgressBar();
+			jMemoryUsageProgressBar.setBounds(new Rectangle(6, 4, 62, 271));
+			jMemoryUsageProgressBar.setValue(0);
+			jMemoryUsageProgressBar.setStringPainted(true);
+			jMemoryUsageProgressBar.setString("0KB");
+			jMemoryUsageProgressBar.setOrientation(JProgressBar.VERTICAL);
+		}
+		return jMemoryUsageProgressBar;
+	}
+
+	/**
+	 * This method initializes jPartitionSize	
+	 * 	
+	 * @return ar.uba.dc.so.gui.component.IntegerTextField	
+	 */
+	private IntegerTextField getJPartitionSize() {
+		if (jPartitionSize == null) {
+			jPartitionSize = new IntegerTextField();
+			jPartitionSize.setBounds(new Rectangle(321, 50, 25, 20));
+			jPartitionSize.setText("10");
+		}
+		return jPartitionSize;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"
