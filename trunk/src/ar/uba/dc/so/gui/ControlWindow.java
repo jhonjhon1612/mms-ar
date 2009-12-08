@@ -56,6 +56,8 @@ public class ControlWindow extends JFrame {
 	private JLabel jInfoLabel = null;
 
 	private ProcessQueuesWindow pw;
+	private MemoryVisualizationWindow mw;
+	
 	private JSlider jSpeedFactorSlider = null;
 	private JLabel jSpeedLabel = null;
 
@@ -70,10 +72,11 @@ public class ControlWindow extends JFrame {
 	/**
 	 * This is the default constructor
 	 */
-	public ControlWindow(ProcessQueuesWindow pw) {
+	public ControlWindow(ProcessQueuesWindow pw, MemoryVisualizationWindow mw) {
 		super();
 		
 		this.pw = pw;
+		this.mw = mw;
 		
 		initialize();
 	}
@@ -87,7 +90,7 @@ public class ControlWindow extends JFrame {
 		this.setContentPane(getJContentPane());
 		this.setTitle("Memory Simulator (Control Window)");
 		this.setResizable(false);
-		this.setBounds(new Rectangle(300, 0, 450, 315));
+		this.setBounds(new Rectangle(325, 5, 450, 315));
 	}
 
 	/**
@@ -367,6 +370,8 @@ public class ControlWindow extends JFrame {
 								Memory m = s.getMemory();
 								cw.getJMemoryUsageProgressBar().setValue(m.getAllocedSize());
 								cw.getJMemoryUsageProgressBar().setString(m.getAllocedSize() + "KB / " + m.sizeInKb + "KB");
+								
+								mw.draw(m);
 							}
 						};
 						

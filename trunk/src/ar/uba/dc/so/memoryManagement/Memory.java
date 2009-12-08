@@ -64,4 +64,8 @@ public abstract class Memory {
 		}
 		System.out.println(sizeInKb - usedSizeInKb + " Kb in the memory are not being used.");
 	}
+
+	public final List<Partition> getPartitions() {
+		return partitions;
+	}
 }
