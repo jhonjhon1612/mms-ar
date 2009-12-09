@@ -13,6 +13,7 @@ import com.mxgraph.layout.mxStackLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import java.awt.Rectangle;
 import javax.swing.WindowConstants;
@@ -91,7 +92,7 @@ public class MemoryVisualizationWindow extends JFrame {
 			}
 			mxCell cell = (mxCell) prev;
 			if(p.isEmpty()) {
-				cell.setStyle("strokeColor=red;fillColor=green");
+				cell.setStyle("shape="+mxConstants.SHAPE_RECTANGLE+";strokeColor=red;fillColor=green");
 			}
 			else {
 				cell.setStyle("strokeColor=green;fillColor=red");

@@ -21,6 +21,7 @@ import ar.uba.dc.so.gui.component.ComboBoxOption;
 import ar.uba.dc.so.gui.component.IntegerTextField;
 import ar.uba.dc.so.memoryManagement.Memory;
 import ar.uba.dc.so.simulator.CmdLineMode;
+import ar.uba.dc.so.simulator.Simulator;
 
 import javax.swing.JButton;
 import javax.swing.BorderFactory;
@@ -31,6 +32,7 @@ import java.awt.Color;
 import javax.swing.JSlider;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import javax.swing.JCheckBox;
 
 public class ControlWindow extends JFrame {
 	private Thread tSimulator;
@@ -68,6 +70,12 @@ public class ControlWindow extends JFrame {
 	private IntegerTextField jPartitionSize = null;
 
 	private JLabel jPartitionSizeLabel = null;
+
+	private JCheckBox jStepByStepCheckBox = null;
+
+	private JLabel jStepByStepLabel = null;
+
+	private JButton jRestartButton = null;
 	
 	/**
 	 * This is the default constructor
@@ -90,7 +98,7 @@ public class ControlWindow extends JFrame {
 		this.setContentPane(getJContentPane());
 		this.setTitle("Memory Simulator (Control Window)");
 		this.setResizable(false);
-		this.setBounds(new Rectangle(325, 5, 450, 315));
+		this.setBounds(new Rectangle(325, 5, 450, 349));
 	}
 
 	/**
@@ -100,11 +108,14 @@ public class ControlWindow extends JFrame {
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
+			jStepByStepLabel = new JLabel();
+			jStepByStepLabel.setBounds(new Rectangle(232, 79, 112, 16));
+			jStepByStepLabel.setText("Step by Step");
 			jPartitionSizeLabel = new JLabel();
 			jPartitionSizeLabel.setBounds(new Rectangle(208, 52, 110, 16));
 			jPartitionSizeLabel.setText("Partition size (KB)");
 			jSpeedLabel = new JLabel();
-			jSpeedLabel.setBounds(new Rectangle(7, 142, 356, 16));
+			jSpeedLabel.setBounds(new Rectangle(7, 152, 356, 16));
 			jSpeedLabel.setText("Simulation Speed (ranging from 2s per step to 100ms per step)");
 			jProcessFileLabel = new JLabel();
 			jProcessFileLabel.setBounds(new Rectangle(7, 102, 155, 16));
@@ -140,6 +151,9 @@ public class ControlWindow extends JFrame {
 			jContentPane.add(getJPanel(), null);
 			jContentPane.add(getJPartitionSize(), null);
 			jContentPane.add(jPartitionSizeLabel, null);
+			jContentPane.add(getJStepByStepCheckBox(), null);
+			jContentPane.add(jStepByStepLabel, null);
+			jContentPane.add(getJRestartButton(), null);
 		}
 		return jContentPane;
 	}
@@ -161,6 +175,13 @@ public class ControlWindow extends JFrame {
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Variable Partition", -1));
 			
 			jMemoryTypeComboBox.setSelectedIndex(1);
+			jMemoryTypeComboBox.addItemListener(new java.awt.event.ItemListener() {
+				public void itemStateChanged(java.awt.event.ItemEvent e) {
+					getJAlgorithmComboBox().setEnabled(false);
+					if(((ComboBoxOption<Integer>) getJMemoryTypeComboBox().getSelectedItem()).getValue() == -1)
+						getJAlgorithmComboBox().setEnabled(true);
+				}
+			});
 		}
 		return jMemoryTypeComboBox;
 	}
@@ -173,7 +194,8 @@ public class ControlWindow extends JFrame {
 	private JTextField getJMemorySizeTextField() {
 		if (jMemorySizeTextField == null) {
 			jMemorySizeTextField = new IntegerTextField();
-			jMemorySizeTextField.setBounds(new Rectangle(115, 50, 21, 20));
+			jMemorySizeTextField.setBounds(new Rectangle(115, 50, 42, 20));
+			jMemorySizeTextField.setHorizontalAlignment(JTextField.RIGHT);
 			jMemorySizeTextField.setText("300");
 		}
 		return jMemorySizeTextField;
@@ -187,7 +209,8 @@ public class ControlWindow extends JFrame {
 	private IntegerTextField getJTimeToSimulateTextField() {
 		if (jTimeToSimulateTextField == null) {
 			jTimeToSimulateTextField = new IntegerTextField();
-			jTimeToSimulateTextField.setBounds(new Rectangle(171, 77, 22, 20));
+			jTimeToSimulateTextField.setBounds(new Rectangle(171, 77, 32, 20));
+			jTimeToSimulateTextField.setHorizontalAlignment(JTextField.RIGHT);
 			jTimeToSimulateTextField.setText("30");
 		}
 		return jTimeToSimulateTextField;
@@ -202,6 +225,7 @@ public class ControlWindow extends JFrame {
 		if (jAlgorithmComboBox == null) {
 			jAlgorithmComboBox = new JComboBox();
 			jAlgorithmComboBox.setBounds(new Rectangle(220, 22, 131, 21));
+			jAlgorithmComboBox.setEnabled(false);
 			
 			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("First Free Zone", 4));
 			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("Best Zone", 5));
@@ -271,7 +295,28 @@ public class ControlWindow extends JFrame {
 		}
 		return jProgressPanel;
 	}
+	
+	private void startSimulationButtonAction() {
+		activateSimulationControls(false);
+	}
 
+	private void activateSimulationControls(boolean b) {
+		getJStopSimulationButton().setEnabled(!b);
+		
+		getJStartSimulationButton().setEnabled(b);
+		getJMemorySizeTextField().setEnabled(b);
+		getJMemoryTypeComboBox().setEnabled(b);
+		if(b && (((ComboBoxOption<Integer>) getJMemoryTypeComboBox().getSelectedItem()).getValue() == -1))
+			getJAlgorithmComboBox().setEnabled(true);
+		else
+			getJAlgorithmComboBox().setEnabled(false);
+		getJPartitionSize().setEnabled(b);
+		getJTimeToSimulateTextField().setEnabled(b);
+		getJStepByStepCheckBox().setEnabled(b);
+		getJFileChooseButton().setEnabled(b);
+		getJSpeedFactorSlider().setEnabled(b);
+		getJRestartButton().setEnabled(b);
+	}
 	/**
 	 * This method initializes jSplitPane	
 	 * 	
@@ -295,10 +340,13 @@ public class ControlWindow extends JFrame {
 	private JButton getJStartSimulationButton() {
 		if (jStartSimulationButton == null) {
 			jStartSimulationButton = new JButton();
-			jStartSimulationButton.setText("Start");
+			jStartSimulationButton.setText("START");
 			final ControlWindow cw = this;
+			
 			jStartSimulationButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
+					startSimulationButtonAction();
+					
 					Integer memType = ((ComboBoxOption<Integer>) jMemoryTypeComboBox.getSelectedItem()).getValue();
 					if(memType == 0)
 						return;
@@ -315,6 +363,8 @@ public class ControlWindow extends JFrame {
 					cw.getJMemoryUsageProgressBar().setMaximum(memorySizeInKb);
 					cw.getJMemoryUsageProgressBar().setValue(0);
 					cw.getJMemoryUsageProgressBar().setString( "0KB / " + memorySizeInKb + "KB");
+					
+					
 					
 					try {
 						final ProcessStatusChangeListener pscl = new ProcessStatusChangeListener() {
@@ -361,17 +411,21 @@ public class ControlWindow extends JFrame {
 							
 							@Override
 							public void schedullerStep(SchedulerStepEvent e) {
+								Scheduler s = (Scheduler) e.getSource();
+								
 								// Actualizo progreso en la simulación
-								cw.getJProgressBar().setValue(cw.getJProgressBar().getValue()+1);
-								cw.getJProgressBar().setString("Elapsed simulation time: " + cw.getJProgressBar().getValue() + "s");
+								cw.getJProgressBar().setValue(s.getTimeInSeconds());
+								cw.getJProgressBar().setString("Elapsed simulation time: " + s.getTimeInSeconds() + "s");
 								
 								// Actualizo el uso de memoria
-								Scheduler s = (Scheduler) e.getSource();
 								Memory m = s.getMemory();
 								cw.getJMemoryUsageProgressBar().setValue(m.getAllocedSize());
 								cw.getJMemoryUsageProgressBar().setString(m.getAllocedSize() + "KB / " + m.sizeInKb + "KB");
 								
 								mw.draw(m);
+								
+								if(getJStepByStepCheckBox().isSelected())
+									stopSimulationButtonAction();
 							}
 						};
 						
@@ -393,9 +447,6 @@ public class ControlWindow extends JFrame {
 						else {
 							tSimulator.resume();
 						}
-						
-						getJStartSimulationButton().setEnabled(false);
-						getJStopSimulationButton().setEnabled(true);
 					}
 					catch (Exception ex) {
 						System.err.println(ex);
@@ -414,20 +465,26 @@ public class ControlWindow extends JFrame {
 	private JButton getJStopSimulationButton() {
 		if (jStopSimulationButton == null) {
 			jStopSimulationButton = new JButton();
-			jStopSimulationButton.setText("Stop");
+			jStopSimulationButton.setText("STOP");
 			jStopSimulationButton.setEnabled(false);
 			jStopSimulationButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					tSimulator.suspend();
-					
-					getJStartSimulationButton().setEnabled(true);
-					getJStopSimulationButton().setEnabled(false);
+					stopSimulationButtonAction();
 				}
 			});
 		}
 		return jStopSimulationButton;
 	}
 
+	private void stopSimulationButtonAction() {
+		tSimulator.suspend();
+		
+		getJStartSimulationButton().setEnabled(true);
+		getJRestartButton().setEnabled(true);
+		
+		getJStopSimulationButton().setEnabled(false);
+	}
+	
 	/**
 	 * This method initializes jProgressBar	
 	 * 	
@@ -454,7 +511,7 @@ public class ControlWindow extends JFrame {
 	private JSlider getJSpeedFactorSlider() {
 		if (jSpeedFactorSlider == null) {
 			jSpeedFactorSlider = new JSlider();
-			jSpeedFactorSlider.setBounds(new Rectangle(8, 159, 352, 45));
+			jSpeedFactorSlider.setBounds(new Rectangle(8, 171, 352, 33));
 			jSpeedFactorSlider.setMaximum(20);
 			jSpeedFactorSlider.setValue(1);
 			jSpeedFactorSlider.setMinorTickSpacing(1);
@@ -504,10 +561,71 @@ public class ControlWindow extends JFrame {
 	private IntegerTextField getJPartitionSize() {
 		if (jPartitionSize == null) {
 			jPartitionSize = new IntegerTextField();
-			jPartitionSize.setBounds(new Rectangle(321, 50, 25, 20));
+			jPartitionSize.setBounds(new Rectangle(321, 50, 32, 20));
+			jPartitionSize.setHorizontalAlignment(JTextField.RIGHT);
 			jPartitionSize.setText("10");
 		}
 		return jPartitionSize;
+	}
+
+	/**
+	 * This method initializes jStepByStepCheckBox	
+	 * 	
+	 * @return javax.swing.JCheckBox	
+	 */
+	private JCheckBox getJStepByStepCheckBox() {
+		if (jStepByStepCheckBox == null) {
+			jStepByStepCheckBox = new JCheckBox();
+			jStepByStepCheckBox.setBounds(new Rectangle(213, 76, 21, 21));
+		}
+		return jStepByStepCheckBox;
+	}
+
+	private void restartSimulationButtonAction() {
+		activateSimulationControls(true);
+		
+		// Nueva ventana de visualización de procesos
+		pw.setVisible(false);
+		pw.dispose();
+		pw = new ProcessQueuesWindow();
+		pw.setVisible(true);
+		
+		// Nueva ventana de visualización de memoria
+		mw.setVisible(false);
+		mw.dispose();
+		mw = new MemoryVisualizationWindow();
+		mw.setVisible(true);
+		
+		// Limpiar indicadores de estado
+		getJMemoryUsageProgressBar().setValue(0);
+		getJMemoryUsageProgressBar().setString( "0KB");
+		getJProgressBar().setValue(0);
+		getJProgressBar().setString("0s");
+	}
+	
+	/**
+	 * This method initializes jRestartButton	
+	 * 	
+	 * @return javax.swing.JButton	
+	 */
+	private JButton getJRestartButton() {
+		if (jRestartButton == null) {
+			jRestartButton = new JButton();
+			jRestartButton.setBounds(new Rectangle(4, 289, 433, 30));
+			jRestartButton.setEnabled(false);
+			jRestartButton.setText("RESTART");
+			jRestartButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					restartSimulationButtonAction();
+					
+					if(tSimulator != null) {
+						tSimulator.stop();
+						tSimulator = null;
+					}
+				}
+			});
+		}
+		return jRestartButton;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"
