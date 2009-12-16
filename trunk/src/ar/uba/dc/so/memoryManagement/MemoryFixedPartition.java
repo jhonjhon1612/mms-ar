@@ -23,7 +23,10 @@ public class MemoryFixedPartition extends Memory {
 		for (Partition partition : partitions) {
 			if (partition.isEmpty()) {
 				partition.setProcessId(process.id);
+				
 				usedSizeInKb += partitionSizeInKb;
+				reallyUsedInKb += process.sizeInKb;
+				
 				return true;
 			}
 		}

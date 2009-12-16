@@ -422,6 +422,8 @@ public class ControlWindow extends JFrame {
 								cw.getJMemoryUsageProgressBar().setValue(m.getAllocedSize());
 								cw.getJMemoryUsageProgressBar().setString(m.getAllocedSize() + "KB / " + m.sizeInKb + "KB");
 								
+								jInfoLabel.setText("Status: simulating; Wasted memory: " + m.getWastedMemory() + "KB");
+								
 								mw.draw(m);
 								
 								if(getJStepByStepCheckBox().isSelected())

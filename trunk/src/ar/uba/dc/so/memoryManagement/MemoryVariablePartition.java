@@ -17,7 +17,9 @@ public abstract class MemoryVariablePartition extends Memory {
 				partitions.add(partitions.get(i-1));
 		}
 		Partition aux = new Partition(process.sizeInKb);
+		
 		usedSizeInKb += aux.sizeInKb;
+		reallyUsedInKb += process.sizeInKb;
 		
 		int freeMemory = partitions.get(partitionId).sizeInKb - process.sizeInKb;
 		

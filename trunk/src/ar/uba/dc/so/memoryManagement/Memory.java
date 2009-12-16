@@ -11,6 +11,7 @@ import ar.uba.dc.so.domain.Scheduler;
 public abstract class Memory {
 	public final int sizeInKb;
 	protected int usedSizeInKb = 0;
+	protected int reallyUsedInKb = 0;
 	
 	protected List<Partition> partitions = new ArrayList<Partition>();
 	
@@ -28,6 +29,11 @@ public abstract class Memory {
 				// acoto por abajo para cuando la partici√≥n es una sola
 				usedSizeInKb -= partition.sizeInKb;
 				usedSizeInKb = (usedSizeInKb < 0)?0:usedSizeInKb;
+				
+				// TODO Esto no est· del todo bien...
+				Process process = Scheduler.processes.get(partition.getProcessId());
+				if(process != null) // DÛnde est·n los procesos que terminan?
+					reallyUsedInKb -= process.sizeInKb;
 				
 				break;
 			}
@@ -67,5 +73,13 @@ public abstract class Memory {
 
 	public final List<Partition> getPartitions() {
 		return partitions;
+	}
+	
+	public int getReallyUsedMemory() {
+		return reallyUsedInKb;
+	}
+	
+	public int getWastedMemory() {
+		return usedSizeInKb-reallyUsedInKb; 
 	}
 }

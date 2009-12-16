@@ -14,7 +14,10 @@ public class MemorySimpleContiguous extends Memory {
 		Partition partition = partitions.get(0);
 		if (partition.isEmpty() && partition.sizeInKb >= process.sizeInKb) {
 			partition.setProcessId(process.id);
+			
 			usedSizeInKb += process.sizeInKb;
+			reallyUsedInKb += process.sizeInKb;
+			
 			return true;
 		} else
 			return false;
