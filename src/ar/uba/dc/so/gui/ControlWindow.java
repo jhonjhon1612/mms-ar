@@ -413,7 +413,7 @@ public class ControlWindow extends JFrame {
 							public void schedullerStep(SchedulerStepEvent e) {
 								Scheduler s = (Scheduler) e.getSource();
 								
-								// Actualizo progreso en la simulación
+								// Actualizo progreso en la simulaciÃ³n
 								cw.getJProgressBar().setValue(s.getTimeInSeconds());
 								cw.getJProgressBar().setString("Elapsed simulation time: " + s.getTimeInSeconds() + "s");
 								
@@ -584,13 +584,13 @@ public class ControlWindow extends JFrame {
 	private void restartSimulationButtonAction() {
 		activateSimulationControls(true);
 		
-		// Nueva ventana de visualización de procesos
+		// Nueva ventana de visualizaciï¿½n de procesos
 		pw.setVisible(false);
 		pw.dispose();
 		pw = new ProcessQueuesWindow();
 		pw.setVisible(true);
 		
-		// Nueva ventana de visualización de memoria
+		// Nueva ventana de visualizaciï¿½n de memoria
 		mw.setVisible(false);
 		mw.dispose();
 		mw = new MemoryVisualizationWindow();

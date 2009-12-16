@@ -24,8 +24,8 @@ public abstract class Memory {
 			if (!partition.isEmpty() && partition.getProcessId() == processId) {
 				partition.clear();
 				
-				// Le resto el tamaño de la partición usada
-				// acoto por abajo para cuando la partición es una sola
+				// Le resto el tamaÃ±o de la particiÃ³n usada
+				// acoto por abajo para cuando la particiÃ³n es una sola
 				usedSizeInKb -= partition.sizeInKb;
 				usedSizeInKb = (usedSizeInKb < 0)?0:usedSizeInKb;
 				
