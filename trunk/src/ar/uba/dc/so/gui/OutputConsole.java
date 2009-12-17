@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 
 import javax.swing.JPanel;
 import javax.swing.JFrame;
+import javax.swing.JRootPane;
 import javax.swing.JScrollBar;
 import javax.swing.JTextPane;
 import javax.swing.JViewport;
@@ -48,6 +49,9 @@ public class OutputConsole extends JFrame {
 		this.setContentPane(getJContentPane());
 		this.setBounds(new Rectangle(350, 400, 370, 200));
 		this.setTitle("Console");
+		
+		this.setUndecorated(true);
+		this.getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG);
 	}
 
 	/**

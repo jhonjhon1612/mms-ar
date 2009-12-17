@@ -5,6 +5,7 @@ import java.awt.Color;
 
 import javax.swing.JPanel;
 import javax.swing.JFrame;
+import javax.swing.JRootPane;
 import javax.swing.JSplitPane;
 
 import ar.uba.dc.so.domain.Process;
@@ -65,6 +66,9 @@ public class ProcessQueuesWindow extends JFrame {
 		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.setContentPane(getJContentPane());
 		this.setTitle("Memory Simulator (Processes)");
+		
+		this.setUndecorated(true);
+		this.getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG);
 	}
 
 	/**

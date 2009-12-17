@@ -3,6 +3,8 @@ package ar.uba.dc.so.gui;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
+import javax.swing.JRootPane;
+
 import java.awt.Dimension;
 import javax.swing.JScrollPane;
 
@@ -43,6 +45,10 @@ public class MemoryVisualizationWindow extends JFrame {
 		this.setContentPane(getJContentPane());
 		this.setTitle("Memory Simulator (Memory visualization)");
 		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		
+		this.setUndecorated(true);
+		this.getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG);
+		
 		this.setBounds(new Rectangle(800, 0, 300, 534));
 	}
 

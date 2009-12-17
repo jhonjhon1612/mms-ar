@@ -19,9 +19,9 @@ public class GraphicMode {
 	public static void run() throws FileNotFoundException {
 		ProcessQueuesWindow pw = new ProcessQueuesWindow();
 		MemoryVisualizationWindow mw = new MemoryVisualizationWindow();
-		
-		ControlWindow cw = new ControlWindow(pw, mw);
 		OutputConsole oc = new OutputConsole();
+		
+		ControlWindow cw = new ControlWindow(pw, mw, oc);
 		
 		cw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
