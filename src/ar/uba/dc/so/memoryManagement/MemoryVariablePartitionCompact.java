@@ -9,25 +9,41 @@ import ar.uba.dc.so.domain.Process;
 public class MemoryVariablePartitionCompact {
 	public static boolean compactAlloc(Process process, List<Partition> partitions) {
 		int sizeInKb = 0;
-		List<Integer> emptyPartitions = new ArrayList<Integer>();
+		List<Integer> indexOfEmptyPartitions = new ArrayList<Integer>();
+		List<Partition> emptyPartitions = new ArrayList<Partition>();
 		
-		for (Partition partition : partitions) {
+		for (Integer i = 0; i < partitions.size(); i++) {
+			Partition partition = partitions.get(i);
 			if (partition.isEmpty()) {
 				sizeInKb += partition.sizeInKb;
+				
+				indexOfEmptyPartitions.add(i);
+				emptyPartitions.add(partition);
+				
 				if (sizeInKb >= process.sizeInKb) {
-					partitions.set(emptyPartitions.get(0), new Partition(process.sizeInKb));
-					emptyPartitions.remove(0);
+					Partition toRemove = partitions.get(indexOfEmptyPartitions.get(0)); 
+						
+					Partition aux = new Partition(process.sizeInKb);
+					aux.setProcessId(process.id);
+					partitions.set(indexOfEmptyPartitions.get(0), aux);
+					
+					indexOfEmptyPartitions.remove(0);
+					emptyPartitions.remove(toRemove);
+					
 					if (sizeInKb - process.sizeInKb > 0) {
-						partitions.set(emptyPartitions.get(0), new Partition(sizeInKb - process.sizeInKb));
-						emptyPartitions.remove(0);
+						toRemove = partitions.get(indexOfEmptyPartitions.get(0));
+						partitions.set(indexOfEmptyPartitions.get(0), new Partition(sizeInKb - process.sizeInKb));
+						
+						indexOfEmptyPartitions.remove(0);
+						emptyPartitions.remove(toRemove);
 					}
-					for (Integer i : emptyPartitions) {
-						partitions.remove(i);
-					}
+					for (Partition p : emptyPartitions)
+						partitions.remove(p);
+					return true;
 				}
 			} else {
 				sizeInKb = 0;
-				emptyPartitions.clear();
+				indexOfEmptyPartitions.clear();
 			}
 		}
 		return false;

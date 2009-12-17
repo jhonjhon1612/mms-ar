@@ -83,10 +83,14 @@ public class MemoryVisualizationWindow extends JFrame {
 		
 		Object prev = null;
 		for(Partition p : m.getPartitions()) {
+			String process = "";
+			if(!p.isEmpty())
+				process += "\nProcess: " + p.getProcessId();
+			
 			if(prev == null)
-				prev = g.insertVertex(g.getDefaultParent(), null, p.sizeInKb + "KB", 0, 5, 40, p.sizeInKb * 2);
+				prev = g.insertVertex(g.getDefaultParent(), null, p.sizeInKb + "KB" + process, 0, 5, 40, p.sizeInKb * 2);
 			else {
-				Object now = g.insertVertex(g.getDefaultParent(), null, p.sizeInKb + "KB", 0, 5, 40, p.sizeInKb * 2);
+				Object now = g.insertVertex(g.getDefaultParent(), null, p.sizeInKb + "KB" + process, 0, 5, 40, p.sizeInKb * 2);
 				g.insertEdge(g.getDefaultParent(), "", "", prev, now);
 				prev = now;
 			}

@@ -6,6 +6,10 @@ import ar.uba.dc.so.domain.Process;
 public class MemorySimpleContiguous extends Memory {
 	public MemorySimpleContiguous(int sizeInKb) {
 		super(sizeInKb);
+		initPartitions();
+	}
+	
+	public void initPartitions() {
 		partitions.add(new Partition(this.sizeInKb));
 	}
 

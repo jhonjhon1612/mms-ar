@@ -31,7 +31,7 @@ public abstract class Memory {
 				usedSizeInKb = (usedSizeInKb < 0)?0:usedSizeInKb;
 				
 				// TODO Esto no está del todo bien...
-				Process process = Scheduler.processes.get(partition.getProcessId());
+				Process process = Scheduler.processes.get(processId);
 				if(process != null) // Dónde están los procesos que terminan?
 					reallyUsedInKb -= process.sizeInKb;
 				
@@ -50,9 +50,7 @@ public abstract class Memory {
 	
 	public abstract boolean alloc(Process process);
 	
-	public void render() {
-		
-	}
+	public abstract void initPartitions();
 	
 	public void writeLog() {
 		System.out.println("The memory (" + sizeInKb + " Kb) have " + partitions.size() + " positions.");
@@ -65,7 +63,9 @@ public abstract class Memory {
 				Integer procSizeInKb = Scheduler.processes.get(partition.getProcessId()).sizeInKb;
 				usedSizeInKb += procSizeInKb;
 				System.out.println("The position " + i + " (" + partition.sizeInKb + " Kb) has process " + partition.getProcessId() + " (" + procSizeInKb + " Kb).");
-				System.out.println(partition.sizeInKb - procSizeInKb + " Kb are not being used in the partition.");
+				
+				if(partition.sizeInKb - procSizeInKb > 0)
+					System.out.println(partition.sizeInKb - procSizeInKb + " Kb are not being used in the partition.");
 			}
 		}
 		System.out.println(sizeInKb - usedSizeInKb + " Kb in the memory are not being used.");
