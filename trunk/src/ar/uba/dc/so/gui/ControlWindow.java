@@ -173,6 +173,7 @@ public class ControlWindow extends JFrame {
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Swapping", 2));
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Fixed Partition", 3));
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Variable Partition", -1));
+			// TODO incluir las opciones de swapping
 			
 			jMemoryTypeComboBox.setSelectedIndex(1);
 			jMemoryTypeComboBox.addItemListener(new java.awt.event.ItemListener() {
@@ -413,7 +414,7 @@ public class ControlWindow extends JFrame {
 							public void schedullerStep(SchedulerStepEvent e) {
 								Scheduler s = (Scheduler) e.getSource();
 								
-								// Actualizo progreso en la simulaciÃ³n
+								// Actualizo progreso en la simulación
 								cw.getJProgressBar().setValue(s.getTimeInSeconds());
 								cw.getJProgressBar().setString("Elapsed simulation time: " + s.getTimeInSeconds() + "s");
 								
@@ -437,7 +438,7 @@ public class ControlWindow extends JFrame {
 							tSimulator = new Thread() {
 								public void run() {
 									try {
-										CmdLineMode.run(cw.getJSpeedFactorSlider().getValue(), ssl, pscl, memoryType, memorySizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile);
+										CmdLineMode.run(cw.getJSpeedFactorSlider().getValue(), ssl, pscl, memoryType, memorySizeInKb, fixedPartitionSizeInKb, 0, runForInSeconds, processesFile); //TODO tener en cuenta el tema de las particiones 
 									}
 									catch(Exception e) {
 										System.err.println(e);

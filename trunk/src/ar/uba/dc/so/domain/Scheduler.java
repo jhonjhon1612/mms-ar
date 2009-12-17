@@ -31,30 +31,33 @@ public class Scheduler {
 	
 	private Set<Integer> processesWereInterrupted = new HashSet<Integer>();
 	
-	private int timeInSeconds = 0;
-	
-	/*public Scheduler(Memory memory) throws IOException {
-		this(DEFAULT_PPROCESSES_FILE_NAME, memory);
-	}*/
+	private static int timeInSeconds = 0;
 	
 	public Scheduler(Memory memory) throws IOException {
 		this.memory = memory;
 	}
 	
-	public void initialize(String processesFileName) throws IOException {
+	public void initialize(String processesFileName) throws Exception {
 		readProcessesFile(processesFileName);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private final void readProcessesFile(String processesFileName) throws IOException {
+	private final void readProcessesFile(String processesFileName) throws Exception {
 		ArrayList<HashMap<String, Object>> processesInput = Yaml.loadType(new File(processesFileName), ArrayList.class);
 		for (HashMap<String, Object> m : processesInput) {
 			int id = ((Integer) m.get("id")).intValue();
 			int sizeInKb = ((Integer) m.get("sizeInKb")).intValue();
 			int timeInSeconds = ((Integer) m.get("timeInSeconds")).intValue();
 			ArrayList<Integer> interruptions = (ArrayList<Integer>) m.get("interruptions");
+			ArrayList<ArrayList<Integer>> positions = (ArrayList<ArrayList<Integer>>) m.get("positions");
+			for(ArrayList<Integer> position : positions) {
+				if(position.isEmpty()) {
+					for (Integer i = 0; i < sizeInKb; i++)
+						position.add(i);
+				}
+			}
 			
-			Process aux = new Process(id, sizeInKb, timeInSeconds, interruptions);
+			Process aux = new Process(id, sizeInKb, timeInSeconds, interruptions, positions);
 			processesWaiting.add(aux);
 			processes.put(id, aux);
 			
@@ -62,7 +65,7 @@ public class Scheduler {
 		}
 	}
 	
-	public final int getTimeInSeconds() {
+	public static final int getTimeInSeconds() {
 		return timeInSeconds;
 	}
 
@@ -71,11 +74,23 @@ public class Scheduler {
 		System.out.println("Second: " + timeInSeconds);
 		for (int i = 0; i < processesRunning.size(); i++) {
 			Process process = processesRunning.get(i);
+			
+			if(memory instanceof ar.uba.dc.so.memoryManagement.MemoryPagingByDemand) {
+				process.remainTimeInSeconds--;
+				if(!memory.alloc(process)) {
+					processesWaiting.add(process);
+					processesRunning.remove(process);
+					
+					fireProcessStatusChangeEvent(new ProcessStatusChangeEvent(this, 7, process, ProcessState.RUNNING, ProcessState.WAITING));
+					continue;
+				}
+				process.remainTimeInSeconds++;
+			}
+			
 			ProcessState state = process.decrementRemainTime();
 			if (state != ProcessState.RUNNING) {
 				processesRunning.remove(process); i--;
 				if (state == ProcessState.FINISHED) {
-					//System.out.println("Process " + process.id + " moved from running to finished.");
 					memory.free(process.id);
 					processesFinished.add(process);
 					
@@ -84,7 +99,7 @@ public class Scheduler {
 				} else if (state == ProcessState.INTERRUPTED) {
 					processesInterrupted.put(process, 2);
 					processesWereInterrupted.add(process.id);
-					if (memory.getClass().getName() == "MemorySwapping")
+					if (memory.getClass().getName() == "ar.uba.dc.so.memoryManagement.MemorySwapping")
 						memory.free(process.id);
 					
 					// Fire events
@@ -94,8 +109,8 @@ public class Scheduler {
 		}
 		for (int i = 0; i < processesWaiting.size(); i++) {
 			Process process = processesWaiting.get(i);
-			System.out.println("Try to alloc process " + process.id + ".");
-			if (!processesWereInterrupted.contains(process.id) || memory.getClass().getName() == "MemorySwapping") {
+			System.out.println("Try to alloc process " + process.id + " (" + process.sizeInKb + " KB).");
+			if (!processesWereInterrupted.contains(process.id) || memory.getClass().getName() == "ar.uba.dc.so.memoryManagement.MemorySwapping") {
 				if (memory.alloc(process)) {
 					processesWaiting.remove(process); i--;
 					processesRunning.add(process);

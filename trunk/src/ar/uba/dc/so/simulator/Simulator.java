@@ -11,6 +11,7 @@ public class Simulator {
         CmdLineParser.Option optRunForInSeconds = parser.addIntegerOption('t', "time");
         CmdLineParser.Option optProcessesFile = parser.addStringOption('p', "processesFile");
         CmdLineParser.Option optFixedPartitionSizeInKb = parser.addIntegerOption('f', "fixedPartitionSize");
+        CmdLineParser.Option optPageSizeInKb = parser.addIntegerOption('c', "pageSize");
         
         try {
             parser.parse(args);
@@ -30,7 +31,8 @@ public class Simulator {
 			Integer runForInSeconds = (Integer)parser.getOptionValue(optRunForInSeconds);
 			String processesFile = (String)parser.getOptionValue(optProcessesFile);
 			Integer fixedPartitionSizeInKb = (Integer)parser.getOptionValue(optFixedPartitionSizeInKb);
-			CmdLineMode.run(memoryType, memorySizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile);
+			Integer pageSizeInKb = (Integer)parser.getOptionValue(optPageSizeInKb);
+			CmdLineMode.run(memoryType, memorySizeInKb, fixedPartitionSizeInKb, pageSizeInKb, runForInSeconds, processesFile);
 		}
 	}
 	

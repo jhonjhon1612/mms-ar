@@ -11,6 +11,10 @@ public class MemoryFixedPartition extends Memory {
 		if (sizeInKb % partitionSizeInKb != 0)
 			throw new Exception("The partition size must be divider of the memory size.");
 		this.partitionSizeInKb = partitionSizeInKb;
+		initPartitions();
+	}
+	
+	public void initPartitions() {
 		int numberOfPartitions = getNumberOfPartition();
 		for (Integer p = 1; p <= numberOfPartitions; p++)
 			partitions.add(new Partition(this.partitionSizeInKb));

@@ -7,6 +7,10 @@ import ar.uba.dc.so.domain.Scheduler;
 import ar.uba.dc.so.domain.SchedulerStepListener;
 import ar.uba.dc.so.memoryManagement.Memory;
 import ar.uba.dc.so.memoryManagement.MemoryFixedPartition;
+import ar.uba.dc.so.memoryManagement.MemoryPaging;
+import ar.uba.dc.so.memoryManagement.MemoryPagingByDemandFIFO;
+import ar.uba.dc.so.memoryManagement.MemoryPagingByDemandLRU;
+import ar.uba.dc.so.memoryManagement.MemoryPagingByDemandNRU;
 import ar.uba.dc.so.memoryManagement.MemorySimpleContiguous;
 import ar.uba.dc.so.memoryManagement.MemorySwapping;
 import ar.uba.dc.so.memoryManagement.MemoryVariablePartitionBetter;
@@ -38,28 +42,38 @@ public class CmdLineMode {
 		System.out.println("\t\t7) Variable partition 'First Free Zone' (with compactation).");
 		System.out.println("\t\t8) Variable partition 'Best Zone' (with compactation).");
 		System.out.println("\t\t9) Variable partition 'Worst Zone' (with compactation).\n");
+		System.out.println("\t\t10) Paging.");
+		System.out.println("\t\t11) Paging by Demand 'LRU'.");
+		System.out.println("\t\t12) Paging by Demand 'NRU'.");
+		System.out.println("\t\t13) Paging by Demand 'FIFO'.\n");
 		System.out.println("\t-s, -memorySize\t\tThe memory size in Kb. Must be a possitive number, bigger than zero.\n");
 		System.out.println("\t-t, -time\t\tTime to simulate in seconds. Must be a possitive number, bigger than zero.\n");
 		System.out.println("\t-p, -processesFile\tYaml file with with the processes to simulate. Sample processes definition are:");
 		System.out.println("\t- !java.util.HashMap\n\tid: 2\n\tsizeInKb: 9\n\ttimeInSeconds: 7\n\tinterruptions: [2, 5]\n");
 		System.out.println("\t- !java.util.HashMap\n\tid: 3\n\tsizeInKb: 23\n\ttimeInSeconds: 17\n\tinterruptions: []\n");
-		System.out.println("\t-f, -fixedPartitionSize\t[ONLY FOR FIXED PARTITION MODE] The memory partition size in Kb. Must be a possitive number, bigger than zero.");	
+		System.out.println("\t- positions.count() must be equal timeInSeconds.\n");
+		System.out.println("\t- And empty list inside the position list means all the positions of code.\n");
+		System.out.println("\t-f, -fixedPartitionSize\t[ONLY FOR FIXED PARTITION MODE] The memory partition size in Kb. Must be a possitive number, bigger than zero and divisor of the total memory size.");	
+		System.out.println("\t-c, -pageSize\t[ONLY FOR PAGING MODES] The memory page size in Kb. Must be a possitive number, bigger than zero and divisor of the total memory size.");	
 		System.out.println("\t-g, -graphicMode\tIts FALSE by default (if its not setted).\n");	
 		System.exit(0);
 	}
 	
-	public static void run(Integer memoryType, Integer memorySizeInKb, Integer fixedPartitionSizeInKb, Integer runForInSeconds, String processesFile) throws Exception {
-		run(1, null, null, memoryType, memorySizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile);
+	public static void run(Integer memoryType, Integer memorySizeInKb, Integer fixedPartitionSizeInKb, Integer pageSizeInKb, Integer runForInSeconds, String processesFile) throws Exception {
+		run(1, null, null, memoryType, memorySizeInKb, fixedPartitionSizeInKb, pageSizeInKb, runForInSeconds, processesFile);
 	}	
 	
-	public static void run(int speedFactor, SchedulerStepListener ssl, ProcessStatusChangeListener pscl, Integer memoryType, Integer memorySizeInKb, Integer fixedPartitionSizeInKb, Integer runForInSeconds, String processesFile) throws Exception {
+	public static void run(int speedFactor, SchedulerStepListener ssl, ProcessStatusChangeListener pscl, Integer memoryType, Integer memorySizeInKb, Integer fixedPartitionSizeInKb, Integer pageSizeInKb, Integer runForInSeconds, String processesFile) throws Exception {
 		if (
 		(memoryType == null || memorySizeInKb == null || runForInSeconds == null || processesFile == null) || (memoryType == 3 && fixedPartitionSizeInKb == null) || 
 		!(new File(processesFile)).exists() || 
 		(memoryType < 1) || (memoryType > 9) ||
 		memorySizeInKb < 1 ||
 		runForInSeconds < 1 ||
-		(fixedPartitionSizeInKb != null && fixedPartitionSizeInKb < 1)
+		(fixedPartitionSizeInKb == null && memoryType == 3) ||
+		(fixedPartitionSizeInKb != null && fixedPartitionSizeInKb < 1) ||
+		(pageSizeInKb == null && memoryType > 9) ||
+		(pageSizeInKb != null && pageSizeInKb < 1)
 		) {
 			printHelp();
 			System.exit(0);
@@ -93,6 +107,18 @@ public class CmdLineMode {
 				break;
 			case 9:
 				memory = new MemoryVariablePartitionWorstCompact(memorySizeInKb);
+				break;
+			case 10:
+				memory = new MemoryPaging(memorySizeInKb, pageSizeInKb);
+				break;
+			case 11:
+				memory = new MemoryPagingByDemandLRU(memorySizeInKb, pageSizeInKb);
+				break;
+			case 12:
+				memory = new MemoryPagingByDemandNRU(memorySizeInKb, pageSizeInKb);
+				break;
+			case 13:
+				memory = new MemoryPagingByDemandFIFO(memorySizeInKb, pageSizeInKb);
 				break;
 		}
 		Scheduler scheduler = new Scheduler(memory);
