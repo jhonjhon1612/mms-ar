@@ -59,6 +59,7 @@ public class ControlWindow extends JFrame {
 
 	private ProcessQueuesWindow pw;
 	private MemoryVisualizationWindow mw;
+	private OutputConsole oc;
 	
 	private JSlider jSpeedFactorSlider = null;
 	private JLabel jSpeedLabel = null;
@@ -80,11 +81,12 @@ public class ControlWindow extends JFrame {
 	/**
 	 * This is the default constructor
 	 */
-	public ControlWindow(ProcessQueuesWindow pw, MemoryVisualizationWindow mw) {
+	public ControlWindow(ProcessQueuesWindow pw, MemoryVisualizationWindow mw, OutputConsole oc) {
 		super();
 		
 		this.pw = pw;
 		this.mw = mw;
+		this.oc = oc;
 		
 		initialize();
 	}
@@ -99,6 +101,19 @@ public class ControlWindow extends JFrame {
 		this.setTitle("Memory Simulator (Control Window)");
 		this.setResizable(false);
 		this.setBounds(new Rectangle(325, 5, 450, 349));
+		final ControlWindow cw = this;
+		this.addWindowListener(new java.awt.event.WindowAdapter() {   
+			public void windowDeiconified(java.awt.event.WindowEvent e) {    
+				cw.pw.setVisible(true);
+				cw.mw.setVisible(true);
+				cw.oc.setVisible(true);
+			}
+			public void windowIconified(java.awt.event.WindowEvent e) {
+				cw.pw.setVisible(false);
+				cw.mw.setVisible(false);
+				cw.oc.setVisible(false);
+			}
+		});
 	}
 
 	/**
@@ -173,14 +188,19 @@ public class ControlWindow extends JFrame {
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Swapping", 2));
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Fixed Partition", 3));
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Variable Partition", -1));
-			// TODO incluir las opciones de swapping
+			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Paging", 10));
+			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Paging by demand", -2));
 			
 			jMemoryTypeComboBox.setSelectedIndex(1);
 			jMemoryTypeComboBox.addItemListener(new java.awt.event.ItemListener() {
+				@SuppressWarnings("unchecked")
 				public void itemStateChanged(java.awt.event.ItemEvent e) {
 					getJAlgorithmComboBox().setEnabled(false);
-					if(((ComboBoxOption<Integer>) getJMemoryTypeComboBox().getSelectedItem()).getValue() == -1)
+					int option = ((ComboBoxOption<Integer>) getJMemoryTypeComboBox().getSelectedItem()).getValue();
+					if(option == -1 || option == -2) {
+						fillJAlgorithmComboBox(option);
 						getJAlgorithmComboBox().setEnabled(true);
+					}
 				}
 			});
 		}
@@ -227,15 +247,32 @@ public class ControlWindow extends JFrame {
 			jAlgorithmComboBox = new JComboBox();
 			jAlgorithmComboBox.setBounds(new Rectangle(220, 22, 131, 21));
 			jAlgorithmComboBox.setEnabled(false);
-			
+		}
+		return jAlgorithmComboBox;
+	}
+	
+	private void fillJAlgorithmComboBox(int parentOption) {
+		getJAlgorithmComboBox();
+		jAlgorithmComboBox.removeAllItems();
+		
+		switch (parentOption) {
+		case -1:
 			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("First Free Zone", 4));
 			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("Best Zone", 5));
 			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("Worst Zone", 6));
 			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("First Free Zone (compactation)", 7));
 			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("Best Zone (compactation)", 8));
 			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("Worst Zone (compactation)", 9));
+			break;
+		case -2:
+			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("LRU", 11));
+			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("NRU", 12));
+			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("FIFO", 13));
+			break;
+		default:
+			break;
 		}
-		return jAlgorithmComboBox;
+		
 	}
 
 	/**
@@ -351,7 +388,7 @@ public class ControlWindow extends JFrame {
 					Integer memType = ((ComboBoxOption<Integer>) jMemoryTypeComboBox.getSelectedItem()).getValue();
 					if(memType == 0)
 						return;
-					else if (memType == -1) {
+					else if (memType == -1 || memType == -2) {
 						memType = ((ComboBoxOption<Integer>) jAlgorithmComboBox.getSelectedItem()).getValue();
 					}
 					
@@ -438,7 +475,7 @@ public class ControlWindow extends JFrame {
 							tSimulator = new Thread() {
 								public void run() {
 									try {
-										CmdLineMode.run(cw.getJSpeedFactorSlider().getValue(), ssl, pscl, memoryType, memorySizeInKb, fixedPartitionSizeInKb, 0, runForInSeconds, processesFile); //TODO tener en cuenta el tema de las particiones 
+										CmdLineMode.run(cw.getJSpeedFactorSlider().getValue(), ssl, pscl, memoryType, memorySizeInKb, fixedPartitionSizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile); //TODO tener en cuenta el tema de las particiones 
 									}
 									catch(Exception e) {
 										System.err.println(e);
@@ -620,6 +657,7 @@ public class ControlWindow extends JFrame {
 			jRestartButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					restartSimulationButtonAction();
+					Scheduler.resetTimeInSeconds(); // Time counter to 0
 					
 					if(tSimulator != null) {
 						tSimulator.stop();

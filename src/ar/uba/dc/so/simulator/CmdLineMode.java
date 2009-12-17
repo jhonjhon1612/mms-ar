@@ -67,7 +67,7 @@ public class CmdLineMode {
 		if (
 		(memoryType == null || memorySizeInKb == null || runForInSeconds == null || processesFile == null) || (memoryType == 3 && fixedPartitionSizeInKb == null) || 
 		!(new File(processesFile)).exists() || 
-		(memoryType < 1) || (memoryType > 9) ||
+		(memoryType < 1) || (memoryType > 13) ||
 		memorySizeInKb < 1 ||
 		runForInSeconds < 1 ||
 		(fixedPartitionSizeInKb == null && memoryType == 3) ||

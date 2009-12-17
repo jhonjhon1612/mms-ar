@@ -68,6 +68,10 @@ public class Scheduler {
 	public static final int getTimeInSeconds() {
 		return timeInSeconds;
 	}
+	
+	public static void resetTimeInSeconds() {
+		timeInSeconds = 0;
+	}
 
 	synchronized public final void incrementTime() throws Exception {
 		timeInSeconds++;
