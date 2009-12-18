@@ -86,18 +86,15 @@ public class OutputConsole extends JFrame {
 			jTextArea.setForeground(Color.black);
 			jTextArea.getDocument().addDocumentListener(new DocumentListener() {
 				
-				@Override
 				public void removeUpdate(DocumentEvent arg0) {
 					// TODO Auto-generated method stub
 					
 				}
 				
-				@Override
 				public void insertUpdate(DocumentEvent arg0) {
 					jTextArea.setCaretPosition( jTextArea.getText().length() );
 				}
 				
-				@Override
 				public void changedUpdate(DocumentEvent arg0) {
 					// TODO Auto-generated method stub
 					
