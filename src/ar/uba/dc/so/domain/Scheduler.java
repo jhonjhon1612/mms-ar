@@ -78,7 +78,7 @@ public class Scheduler {
 		for (int i = 0; i < processesRunning.size(); i++) {
 			Process process = processesRunning.get(i);
 			
-			if(memory instanceof ar.uba.dc.so.memoryManagement.MemoryPagingByDemand) {
+			if(memory instanceof ar.uba.dc.so.memoryManagement.MemoryPagingByDemand && process.remainTimeInSeconds > 1) {
 				process.remainTimeInSeconds--;
 				if(!memory.alloc(process)) {
 					processesWaiting.add(process);
