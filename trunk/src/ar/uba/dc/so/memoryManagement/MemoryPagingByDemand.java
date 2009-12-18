@@ -1,6 +1,5 @@
 package ar.uba.dc.so.memoryManagement;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,10 +36,7 @@ public abstract class MemoryPagingByDemand extends MemoryPaging {
 		boolean ret = true;
 		if (!processesPages.containsKey(process.id))
 			createProcessPages(process);
-		ArrayList<Integer> positions = process.memoryPositionsNeeded();
-		for (int i = 0; i < positions.size(); i++)
-			positions.set(i, getPageNumber(positions.get(i)));
-		Set<Integer> pages = new HashSet<Integer>(positions);
+		Set<Integer> pages = pagesNeeded(process);
 		for(Integer page : pages) {
 			if (isPageLoaded(process.id, page))
 				touch(process.id, page);
@@ -50,15 +46,18 @@ public abstract class MemoryPagingByDemand extends MemoryPaging {
 		return ret;
 	}
 	
-	@SuppressWarnings("unchecked")
+	private Set<Integer> pagesNeeded(final Process process) {
+		List<Integer> memoryPositions = process.memoryPositionsNeeded();
+		Set<Integer> pages = new HashSet<Integer>();
+		for (int i = 0; i < memoryPositions.size(); i++)
+			pages.add(getPageNumber(memoryPositions.get(i)));
+		return pages;
+	}
+	
 	private boolean isAllocable(Process process) {
-		int neddedPartitions = getNumberOfPages(process);
+		Set<Integer> pagesNedded = pagesNeeded(process);
+		int neddedPartitions = pagesNedded.size();
 		if (neddedPartitions <= getNumberOfPages()) {
-			List<Integer> neededPositions = (List<Integer>) process.memoryPositionsNeeded().clone();
-			for (int i = 0; i < neededPositions.size(); i++)
-				neededPositions.set(i, getPageNumber(neededPositions.get(i)));
-			neddedPartitions = (new HashSet(neededPositions)).size();
-			
 			for (int i = 0; i < partitions.size(); i++) {
 				if (partitions.get(i).isEmpty())
 					neddedPartitions--;
@@ -104,6 +103,8 @@ public abstract class MemoryPagingByDemand extends MemoryPaging {
 			freePartition();
 		Integer pos = getEmptyPartitionIndex();
 		Map<String, Object> pageInfo = processesPages.get(processId).get(page);
+		if (pageInfo == null)
+			System.out.println(processId + "  " + page);
 		pageInfo.put("partitionPos", pos);
 		pageInfo.put("inMemory", Boolean.TRUE);
 		pageInfo.put("allocatedInMemory", Scheduler.getTimeInSeconds());
@@ -131,6 +132,8 @@ public abstract class MemoryPagingByDemand extends MemoryPaging {
 	}
 	
 	private boolean isPageLoaded(Integer processId, Integer page) {
+		if (!processesPages.containsKey(processId) || !processesPages.get(processId).containsKey(page))
+			return false;
 		return (Boolean) processesPages.get(processId).get(page).get("inMemory");
 	}
 	
