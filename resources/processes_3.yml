@@ -1,0 +1,14 @@
+# This test case is made mostly for the paging by demand. Should be used with 32kb memory and pages of 4kb.
+---
+- !java.util.HashMap
+  id: 1
+  sizeInKb: 36
+  timeInSeconds: 6
+  interruptions: []
+  positions: [[0,1,2,3,5,8,13,14,15,16,20,21,27,31],[0,1,2,3,5,13,14,15,16,20,21,27,31,35],[13,14,15,16,20,21,27,31,35],[],[],[]]
+- !java.util.HashMap
+  id: 2
+  sizeInKb: 21
+  timeInSeconds: 5
+  interruptions: []
+  positions: [[1,2,3,4,5,6,7],[],[],[],[]]
