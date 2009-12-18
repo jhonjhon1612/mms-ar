@@ -21,8 +21,6 @@ import ar.uba.dc.so.gui.component.ComboBoxOption;
 import ar.uba.dc.so.gui.component.IntegerTextField;
 import ar.uba.dc.so.memoryManagement.Memory;
 import ar.uba.dc.so.simulator.CmdLineMode;
-import ar.uba.dc.so.simulator.Simulator;
-
 import javax.swing.JButton;
 import javax.swing.BorderFactory;
 import javax.swing.border.BevelBorder;
@@ -31,7 +29,6 @@ import javax.swing.JProgressBar;
 import java.awt.Color;
 import javax.swing.JSlider;
 import java.awt.Font;
-import java.awt.GridBagLayout;
 import javax.swing.JCheckBox;
 
 public class ControlWindow extends JFrame {
@@ -338,13 +335,15 @@ public class ControlWindow extends JFrame {
 		activateSimulationControls(false);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void activateSimulationControls(boolean b) {
 		getJStopSimulationButton().setEnabled(!b);
 		
 		getJStartSimulationButton().setEnabled(b);
 		getJMemorySizeTextField().setEnabled(b);
 		getJMemoryTypeComboBox().setEnabled(b);
-		if(b && (((ComboBoxOption<Integer>) getJMemoryTypeComboBox().getSelectedItem()).getValue() == -1))
+		ComboBoxOption<Integer> comboBoxOption = (ComboBoxOption<Integer>) getJMemoryTypeComboBox().getSelectedItem();
+		if(b && (comboBoxOption.getValue() == -1))
 			getJAlgorithmComboBox().setEnabled(true);
 		else
 			getJAlgorithmComboBox().setEnabled(false);
@@ -382,14 +381,17 @@ public class ControlWindow extends JFrame {
 			final ControlWindow cw = this;
 			
 			jStartSimulationButton.addActionListener(new java.awt.event.ActionListener() {
+				@SuppressWarnings("unchecked")
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					startSimulationButtonAction();
 					
-					Integer memType = ((ComboBoxOption<Integer>) jMemoryTypeComboBox.getSelectedItem()).getValue();
+					ComboBoxOption<Integer> comboBoxOption = (ComboBoxOption<Integer>) jMemoryTypeComboBox.getSelectedItem();
+					Integer memType = comboBoxOption.getValue();
 					if(memType == 0)
 						return;
 					else if (memType == -1 || memType == -2) {
-						memType = ((ComboBoxOption<Integer>) jAlgorithmComboBox.getSelectedItem()).getValue();
+						ComboBoxOption<Integer> comboBoxOption2 = (ComboBoxOption<Integer>) jAlgorithmComboBox.getSelectedItem();
+						memType = comboBoxOption2.getValue();
 					}
 					
 					final Integer memorySizeInKb = Integer.parseInt(jMemorySizeTextField.getText());
@@ -452,8 +454,8 @@ public class ControlWindow extends JFrame {
 								Scheduler s = (Scheduler) e.getSource();
 								
 								// Actualizo progreso en la simulación
-								cw.getJProgressBar().setValue(s.getTimeInSeconds());
-								cw.getJProgressBar().setString("Elapsed simulation time: " + s.getTimeInSeconds() + "s");
+								cw.getJProgressBar().setValue(Scheduler.getTimeInSeconds());
+								cw.getJProgressBar().setString("Elapsed simulation time: " + Scheduler.getTimeInSeconds() + "s");
 								
 								// Actualizo el uso de memoria
 								Memory m = s.getMemory();

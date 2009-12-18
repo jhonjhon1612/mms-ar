@@ -1,24 +1,14 @@
 package ar.uba.dc.so.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Point;
 import java.awt.Rectangle;
 
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.JRootPane;
-import javax.swing.JScrollBar;
-import javax.swing.JTextPane;
-import javax.swing.JViewport;
 import javax.swing.WindowConstants;
 import javax.swing.JTextArea;
 import java.awt.Color;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.InputMethodListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.JScrollPane;
 import javax.swing.event.DocumentEvent;
