@@ -32,6 +32,8 @@ import java.awt.Font;
 import javax.swing.JCheckBox;
 
 public class ControlWindow extends JFrame {
+	public static String DEFAULT_PPROCESSES_FILE_NAME = "/Users/Ignacio/workspace/OSMMS/resources/processes.yml";
+	
 	private Thread tSimulator;
 	
 	private static final long serialVersionUID = 1L;
@@ -296,7 +298,7 @@ public class ControlWindow extends JFrame {
 			jFileChooseButton = new JButton();
 			jFileChooseButton.setBounds(new Rectangle(214, 119, 82, 20));
 			jFileChooseButton.setText("Choose");
-			final JFileChooser fc = new JFileChooser(new File(Scheduler.DEFAULT_PPROCESSES_FILE_NAME));
+			final JFileChooser fc = new JFileChooser(new File(DEFAULT_PPROCESSES_FILE_NAME));
 			jFileChooseButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					int retVal = fc.showOpenDialog(ControlWindow.this);
@@ -409,7 +411,6 @@ public class ControlWindow extends JFrame {
 					try {
 						final ProcessStatusChangeListener pscl = new ProcessStatusChangeListener() {
 							
-							@Override
 							public void statusChanged(ProcessStatusChangeEvent e) {
 								System.out.println("Process " + e.getProcess().id + " moved from " + e.getPreviousState() + " to " + e.getNextState());
 								
@@ -449,7 +450,6 @@ public class ControlWindow extends JFrame {
 						
 						final SchedulerStepListener ssl = new SchedulerStepListener() {
 							
-							@Override
 							public void schedullerStep(SchedulerStepEvent e) {
 								Scheduler s = (Scheduler) e.getSource();
 								

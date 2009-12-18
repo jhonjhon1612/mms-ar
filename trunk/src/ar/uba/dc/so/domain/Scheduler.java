@@ -16,7 +16,6 @@ import org.ho.yaml.Yaml;
 import ar.uba.dc.so.memoryManagement.Memory;
 
 public class Scheduler {
-	public static String DEFAULT_PPROCESSES_FILE_NAME = "/Users/Ignacio/workspace/OSMMS/resources/processes.yml";
 	private final Memory memory;
 	public static Map<Integer, Process> processes = new HashMap<Integer, Process>();
 
