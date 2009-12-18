@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JTextField;
 
 
+@SuppressWarnings("serial")
 public class IntegerTextField extends JTextField {
 
     final static String badchars 

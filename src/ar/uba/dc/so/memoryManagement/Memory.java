@@ -2,8 +2,6 @@ package ar.uba.dc.so.memoryManagement;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
-
 import ar.uba.dc.so.domain.Partition;
 import ar.uba.dc.so.domain.Process;
 import ar.uba.dc.so.domain.Scheduler;

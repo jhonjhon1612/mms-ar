@@ -50,6 +50,7 @@ public abstract class MemoryPagingByDemand extends MemoryPaging {
 		return ret;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private boolean isAllocable(Process process) {
 		int neddedPartitions = getNumberOfPages(process);
 		if (neddedPartitions <= getNumberOfPages()) {

@@ -2,6 +2,7 @@ package ar.uba.dc.so.domain;
 
 import java.awt.AWTEvent;
 
+@SuppressWarnings("serial")
 public class ProcessStatusChangeEvent extends AWTEvent {
 	private Process process;
 	private ProcessState previousState;

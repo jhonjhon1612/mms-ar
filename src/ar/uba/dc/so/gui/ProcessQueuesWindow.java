@@ -11,14 +11,12 @@ import javax.swing.JSplitPane;
 import ar.uba.dc.so.domain.Process;
 import ar.uba.dc.so.domain.ProcessState;
 
-import com.mxgraph.layout.mxFastOrganicLayout;
 import com.mxgraph.layout.mxStackLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import javax.swing.JScrollPane;
-import java.awt.Dimension;
 import javax.swing.WindowConstants;
 
 public class ProcessQueuesWindow extends JFrame {
@@ -220,7 +218,6 @@ public class ProcessQueuesWindow extends JFrame {
 		}
 		
 		
-		JScrollPane pane = getJScrollPane();
 		mxGraph graph = gComp.getGraph();
 		
 		Object parent = graph.getDefaultParent();
