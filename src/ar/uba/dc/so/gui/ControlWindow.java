@@ -216,7 +216,7 @@ public class ControlWindow extends JFrame {
 			jMemorySizeTextField = new IntegerTextField();
 			jMemorySizeTextField.setBounds(new Rectangle(115, 50, 42, 20));
 			jMemorySizeTextField.setHorizontalAlignment(JTextField.RIGHT);
-			jMemorySizeTextField.setText("300");
+			jMemorySizeTextField.setText("64");
 		}
 		return jMemorySizeTextField;
 	}
@@ -231,7 +231,7 @@ public class ControlWindow extends JFrame {
 			jTimeToSimulateTextField = new IntegerTextField();
 			jTimeToSimulateTextField.setBounds(new Rectangle(171, 77, 32, 20));
 			jTimeToSimulateTextField.setHorizontalAlignment(JTextField.RIGHT);
-			jTimeToSimulateTextField.setText("30");
+			jTimeToSimulateTextField.setText("60");
 		}
 		return jTimeToSimulateTextField;
 	}
@@ -605,7 +605,7 @@ public class ControlWindow extends JFrame {
 			jPartitionSize = new IntegerTextField();
 			jPartitionSize.setBounds(new Rectangle(321, 50, 32, 20));
 			jPartitionSize.setHorizontalAlignment(JTextField.RIGHT);
-			jPartitionSize.setText("10");
+			jPartitionSize.setText("4");
 		}
 		return jPartitionSize;
 	}
