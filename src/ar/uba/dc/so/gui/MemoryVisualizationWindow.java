@@ -96,7 +96,7 @@ public class MemoryVisualizationWindow extends JFrame {
 				prev = g.insertVertex(g.getDefaultParent(), null, p.sizeInKb + "KB" + process, 0, 5, 40, p.sizeInKb * 2);
 			else {
 				Object now = g.insertVertex(g.getDefaultParent(), null, p.sizeInKb + "KB" + process, 0, 5, 40, p.sizeInKb * 2);
-				g.insertEdge(g.getDefaultParent(), "", "", prev, now);
+				//g.insertEdge(g.getDefaultParent(), "", "", prev, now);
 				prev = now;
 			}
 			mxCell cell = (mxCell) prev;

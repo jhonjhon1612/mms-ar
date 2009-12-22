@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.JDesktopPane;
 
-public class MainWindow extends JFrame {
+public class PageTableWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
@@ -14,7 +14,7 @@ public class MainWindow extends JFrame {
 	/**
 	 * This is the default constructor
 	 */
-	public MainWindow() {
+	public PageTableWindow() {
 		super();
 		initialize();
 	}
