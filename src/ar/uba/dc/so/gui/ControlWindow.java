@@ -20,6 +20,7 @@ import ar.uba.dc.so.domain.SchedulerStepListener;
 import ar.uba.dc.so.gui.component.ComboBoxOption;
 import ar.uba.dc.so.gui.component.IntegerTextField;
 import ar.uba.dc.so.memoryManagement.Memory;
+import ar.uba.dc.so.memoryManagement.MemoryPaging;
 import ar.uba.dc.so.simulator.CmdLineMode;
 import javax.swing.JButton;
 import javax.swing.BorderFactory;
@@ -59,6 +60,7 @@ public class ControlWindow extends JFrame {
 	private ProcessQueuesWindow pw;
 	private MemoryVisualizationWindow mw;
 	private OutputConsole oc;
+	private PageTableWindow ptw;
 	
 	private JSlider jSpeedFactorSlider = null;
 	private JLabel jSpeedLabel = null;
@@ -80,12 +82,13 @@ public class ControlWindow extends JFrame {
 	/**
 	 * This is the default constructor
 	 */
-	public ControlWindow(ProcessQueuesWindow pw, MemoryVisualizationWindow mw, OutputConsole oc) {
+	public ControlWindow(ProcessQueuesWindow pw, MemoryVisualizationWindow mw, OutputConsole oc, PageTableWindow ptw) {
 		super();
 		
 		this.pw = pw;
 		this.mw = mw;
 		this.oc = oc;
+		this.ptw = ptw;
 		
 		initialize();
 	}
@@ -106,11 +109,13 @@ public class ControlWindow extends JFrame {
 				cw.pw.setVisible(true);
 				cw.mw.setVisible(true);
 				cw.oc.setVisible(true);
+				cw.ptw.setVisible(true);
 			}
 			public void windowIconified(java.awt.event.WindowEvent e) {
 				cw.pw.setVisible(false);
 				cw.mw.setVisible(false);
 				cw.oc.setVisible(false);
+				cw.ptw.setVisible(false);
 			}
 		});
 	}
@@ -465,6 +470,10 @@ public class ControlWindow extends JFrame {
 								jInfoLabel.setText("Status: simulating; Wasted memory: " + m.getWastedMemory() + "KB");
 								
 								mw.draw(m);
+								if(m instanceof MemoryPaging) {
+									MemoryPaging mPrima = (MemoryPaging) m;
+									ptw.draw(mPrima);
+								}
 								
 								if(getJStepByStepCheckBox().isSelected())
 									stopSimulationButtonAction();
