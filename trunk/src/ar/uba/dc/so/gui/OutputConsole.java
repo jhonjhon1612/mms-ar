@@ -37,7 +37,7 @@ public class OutputConsole extends JFrame {
 		this.setSize(300, 200);
 		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.setContentPane(getJContentPane());
-		this.setBounds(new Rectangle(350, 400, 370, 200));
+		this.setBounds(new Rectangle(350, 400, 357, 152));
 		this.setTitle("Console");
 		
 		this.setUndecorated(true);
@@ -104,4 +104,4 @@ public class OutputConsole extends JFrame {
 		return jTextArea;
 	}
 
-}
+}  //  @jve:decl-index=0:visual-constraint="10,10"
