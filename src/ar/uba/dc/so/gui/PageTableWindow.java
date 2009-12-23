@@ -45,6 +45,8 @@ public class PageTableWindow extends JFrame {
 	 */
 	private void initialize() {
 		this.setSize(726, 279);
+		this.setLocation(5, 568);
+		
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.setContentPane(getJContentPane());
 		this.setTitle("JFrame");
