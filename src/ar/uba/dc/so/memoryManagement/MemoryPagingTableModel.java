@@ -1,43 +1,60 @@
 package ar.uba.dc.so.memoryManagement;
 
-import javax.swing.table.AbstractTableModel;
+import java.util.HashMap;
+import java.util.Map;
 
-import ar.uba.dc.so.domain.Partition;
+import javax.swing.table.DefaultTableModel;
 
 
 @SuppressWarnings("serial")
-public class MemoryPagingTableModel extends AbstractTableModel {
+public class MemoryPagingTableModel extends DefaultTableModel {
 
-	private MemoryPaging m;
+	private Map<Integer, Map<String, Object>> pagesInfo = null;
 	
 	public MemoryPagingTableModel(MemoryPaging m) {
-		this.m = m;
+		super();
+		
+		Object[] colIds = {"Process", "Page", "Partition Position"};
+		this.setColumnIdentifiers(colIds);
+		
+		pagesInfo = new HashMap<Integer, Map<String, Object>>();
+		int count = 0;
+		for(Integer pId : m.processesPages.keySet()) {
+			Map<Integer, Integer> map = m.processesPages.get(pId); 
+			for(Integer page : map.keySet()) {
+				HashMap<String, Object> pInfoToStore = new HashMap<String, Object>();
+				
+				pInfoToStore.put("processId", pId);
+				pInfoToStore.put("page", page);
+				pInfoToStore.put("partitionPos", map.get(page));
+				
+				pagesInfo.put(count++, pInfoToStore);
+			}
+		}
 	}
 	
 	@Override
 	public int getColumnCount() {
-		return 5;
+		return 3;
 	}
 
 	@Override
 	public int getRowCount() {
-		return m.getNumberOfPages();
+		if(pagesInfo == null)
+			return 0;
+		return pagesInfo.keySet().size();
 	}
 
 	@Override
 	public Object getValueAt(int arg0, int arg1) {
-		Partition p = m.partitions.get(arg0);
+		Map<String, Object> map = pagesInfo.get(arg0);
 		switch(arg1) {
 		case 0:
-			if(p.isEmpty())
-				return "Free";
-			return "Process " + p.getProcessId();
+			return map.get("processId");
 		case 1:
-			return arg0;
+			return map.get("page");
 		case 2:
-			return p.sizeInKb + "Kb";
-		case 3:
-			return  "0x" + Integer.toHexString(p.sizeInKb * arg0).toUpperCase();
+			return map.get("partitionPos");
 		}
 		
 		return null;

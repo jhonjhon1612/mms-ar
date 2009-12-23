@@ -3,23 +3,18 @@ package ar.uba.dc.so.memoryManagement;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
-
-import ar.uba.dc.so.domain.Partition;
 
 
 @SuppressWarnings("serial")
 public class MemoryPagingByDemandTableModel extends DefaultTableModel {
 
-	private MemoryPagingByDemand m;
 	private Map<Integer, Map<String,Object>> pagesInfo = null;
 	
 	public MemoryPagingByDemandTableModel(MemoryPagingByDemand m) {
 		super();
 		
-		this.m = m;
-		Object[] colIds = {"Process", "Partition Position", "In memory?", "Allocated in memory?", "Last use", "Uses count", "Last use in memory", "Uses count in memory"};
+		Object[] colIds = {"Process", "Page", "Partition Position", "In memory?", "Allocated in memory?", "Last use", "Uses count", "Last use in memory", "Uses count in memory"};
 		this.setColumnIdentifiers(colIds);
 		
 		pagesInfo = new HashMap<Integer, Map<String,Object>>();
@@ -40,7 +35,7 @@ public class MemoryPagingByDemandTableModel extends DefaultTableModel {
 	
 	@Override
 	public int getColumnCount() {
-		return 8;
+		return 9;
 	}
 
 	@Override
@@ -58,18 +53,20 @@ public class MemoryPagingByDemandTableModel extends DefaultTableModel {
 		case 0:
 			return pageInfo.get("processId");
 		case 1:
-			return pageInfo.get("partitionPos");
+			return pageInfo.get("page");
 		case 2:
-			return pageInfo.get("inMemory");
+			return pageInfo.get("partitionPos");
 		case 3:
-			return pageInfo.get("allocatedInMemory");
+			return pageInfo.get("inMemory");
 		case 4:
-			return pageInfo.get("lastUse");
+			return pageInfo.get("allocatedInMemory");
 		case 5:
-			return pageInfo.get("usesCount");
+			return pageInfo.get("lastUse");
 		case 6:
-			return pageInfo.get("lastUseInMemory");
+			return pageInfo.get("usesCount");
 		case 7:
+			return pageInfo.get("lastUseInMemory");
+		case 8:
 			return pageInfo.get("usesCountInMemory");
 		}
 		

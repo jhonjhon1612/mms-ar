@@ -3,6 +3,7 @@ package ar.uba.dc.so.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.JRootPane;
@@ -46,6 +47,10 @@ public class ProcessQueuesWindow extends JFrame {
 	private Object lastFinishedAdded = null;
 	private mxGraphComponent gCompFinished = null;
 	private mxStackLayout finishedGraphLayout = null;
+	private JPanel jWaitingProcessesPanel = null;
+	private JPanel jRunningProcessesPanel = null;
+	private JPanel jInterruptedProcessesPanel = null;
+	private JPanel jFinishedProcessesPanel = null;
 	/**
 	 * This is the default constructor
 	 */
@@ -109,13 +114,52 @@ public class ProcessQueuesWindow extends JFrame {
 			jSplitPane1 = new JSplitPane();
 			jSplitPane1.setOrientation(JSplitPane.VERTICAL_SPLIT);
 			jSplitPane1.setDividerLocation(100);
-			jSplitPane1.setBottomComponent(getJScrollPane1());
-			jSplitPane1.setTopComponent(getJScrollPane());
+			jSplitPane1.setBottomComponent(getJRunningProcessesPanel());
+			jSplitPane1.setTopComponent(getJWaitingProcessesPanel());
 			
 		}
 		return jSplitPane1;
 	}
-
+	
+	private JPanel getJWaitingProcessesPanel() {
+		if(jWaitingProcessesPanel == null) {
+			jWaitingProcessesPanel = new JPanel();
+			jWaitingProcessesPanel.setLayout(new BorderLayout());
+			jWaitingProcessesPanel.add(getJScrollPane(), BorderLayout.CENTER);
+			jWaitingProcessesPanel.add(new JLabel("Waiting"), BorderLayout.NORTH);
+		}
+		return jWaitingProcessesPanel;
+	}
+	
+	private JPanel getJRunningProcessesPanel() {
+		if(jRunningProcessesPanel == null) {
+			jRunningProcessesPanel = new JPanel();
+			jRunningProcessesPanel.setLayout(new BorderLayout());
+			jRunningProcessesPanel.add(getJScrollPane1(), BorderLayout.CENTER);
+			jRunningProcessesPanel.add(new JLabel("Running"), BorderLayout.NORTH);
+		}
+		return jRunningProcessesPanel;
+	}
+	
+	private JPanel getJInterruptedProcessesPanel() {
+		if(jInterruptedProcessesPanel == null) {
+			jInterruptedProcessesPanel = new JPanel();
+			jInterruptedProcessesPanel.setLayout(new BorderLayout());
+			jInterruptedProcessesPanel.add(getJScrollPane2(), BorderLayout.CENTER);
+			jInterruptedProcessesPanel.add(new JLabel("Interruoted"), BorderLayout.NORTH);
+		}
+		return jInterruptedProcessesPanel;
+	}
+	
+	private JPanel getJFinishedProcessesPanel() {
+		if(jFinishedProcessesPanel == null) {
+			jFinishedProcessesPanel = new JPanel();
+			jFinishedProcessesPanel.setLayout(new BorderLayout());
+			jFinishedProcessesPanel.add(getJScrollPane3(), BorderLayout.CENTER);
+			jFinishedProcessesPanel.add(new JLabel("Finished"), BorderLayout.NORTH);
+		}
+		return jFinishedProcessesPanel;
+	}
 	/**
 	 * This method initializes jSplitPane2	
 	 * 	
@@ -125,8 +169,8 @@ public class ProcessQueuesWindow extends JFrame {
 		if (jSplitPane2 == null) {
 			jSplitPane2 = new JSplitPane();
 			jSplitPane2.setOrientation(JSplitPane.VERTICAL_SPLIT);
-			jSplitPane2.setTopComponent(getJScrollPane2());
-			jSplitPane2.setBottomComponent(getJScrollPane3());
+			jSplitPane2.setTopComponent(getJInterruptedProcessesPanel());
+			jSplitPane2.setBottomComponent(getJFinishedProcessesPanel());
 			jSplitPane2.setDividerLocation(200);
 		}
 		return jSplitPane2;
@@ -186,7 +230,7 @@ public class ProcessQueuesWindow extends JFrame {
 	
 	private void addProcess(Process p, ProcessState state) {
 		String idString = "";
-		Object lastAdded = null;
+		Object lastAdded = null; // Se queda por si queremos volver a poner las flechitas
 		mxGraphComponent gComp = null;
 		mxStackLayout layout = null;
 		
