@@ -8,16 +8,12 @@ import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
-
 import ar.uba.dc.so.memoryManagement.MemoryPaging;
 import ar.uba.dc.so.memoryManagement.MemoryPagingByDemand;
 import ar.uba.dc.so.memoryManagement.MemoryPagingByDemandTableModel;
 import ar.uba.dc.so.memoryManagement.MemoryPagingTableModel;
-import ar.uba.dc.so.memoryManagement.MemoryTableCellRenderer;
-import java.awt.Dimension;
+import ar.uba.dc.so.memoryManagement.MemoryPagingByDemandTableCellRenderer;
 
 public class PageTableWindow extends JFrame {
 
@@ -27,8 +23,6 @@ public class PageTableWindow extends JFrame {
 	private JTabbedPane jTabbedPane = null;
 	private JScrollPane jScrollPane = null;
 	private JTable jTable = null;
-	private JScrollPane jScrollPane1 = null;
-	private JTable jTable1 = null;
 
 	/**
 	 * This is the default constructor
@@ -126,7 +120,7 @@ public class PageTableWindow extends JFrame {
 		if(m instanceof MemoryPagingByDemand) {
 			getJTable().setModel(new MemoryPagingByDemandTableModel((MemoryPagingByDemand) m));
 			
-			MemoryTableCellRenderer mtCellRenderer = new MemoryTableCellRenderer();
+			MemoryPagingByDemandTableCellRenderer mtCellRenderer = new MemoryPagingByDemandTableCellRenderer();
 			TableColumnModel tColModel = getJTable().getColumnModel();
 			for(int i = 0; i < tColModel.getColumnCount(); i++) {
 				tColModel.getColumn(i).setCellRenderer(mtCellRenderer);
@@ -134,31 +128,6 @@ public class PageTableWindow extends JFrame {
 		}
 		else
 			getJTable().setModel(new MemoryPagingTableModel(m));
-	}
-
-	/**
-	 * This method initializes jScrollPane1	
-	 * 	
-	 * @return javax.swing.JScrollPane	
-	 */
-	private JScrollPane getJScrollPane1() {
-		if (jScrollPane1 == null) {
-			jScrollPane1 = new JScrollPane();
-			jScrollPane1.setViewportView(getJTable1());
-		}
-		return jScrollPane1;
-	}
-
-	/**
-	 * This method initializes jTable1	
-	 * 	
-	 * @return javax.swing.JTable	
-	 */
-	private JTable getJTable1() {
-		if (jTable1 == null) {
-			jTable1 = new JTable();
-		}
-		return jTable1;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"
