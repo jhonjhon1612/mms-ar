@@ -93,6 +93,7 @@ public abstract class MemoryPagingByDemand extends MemoryPaging {
 			pageInfo.put("usesCount", null);
 			pageInfo.put("lastUseInMemory", null);
 			pageInfo.put("usesCountInMemory", null);
+			pageInfo.put("processId", process.id); // Add-on para poder extraer la información de 
 			processPages.put(page, pageInfo);
 		}
 		processesPages.put(process.id, processPages);
@@ -166,7 +167,7 @@ public abstract class MemoryPagingByDemand extends MemoryPaging {
 				Integer usesCountInMemory = (Integer) pageInfo.get("usesCountInMemory");
 					
 				if (inMemory) {
-				System.out.println("Page " + page + "\tis allocated in memory: position " + partitionPos.toString());	
+					System.out.println("Page " + page + "\tis allocated in memory: position " + partitionPos.toString());	
 					System.out.println("\tAllocated in memory at second: " + allocatedInMemory.toString());
 					System.out.println("\tLast use in memory at second: " + lastUseInMemory.toString());
 					System.out.println("\tUses count in memory: " + usesCountInMemory.toString());

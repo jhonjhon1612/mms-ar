@@ -9,10 +9,15 @@ import javax.swing.JTabbedPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import ar.uba.dc.so.memoryManagement.MemoryPaging;
+import ar.uba.dc.so.memoryManagement.MemoryPagingByDemand;
+import ar.uba.dc.so.memoryManagement.MemoryPagingByDemandTableModel;
 import ar.uba.dc.so.memoryManagement.MemoryPagingTableModel;
+import ar.uba.dc.so.memoryManagement.MemoryTableCellRenderer;
+import java.awt.Dimension;
 
 public class PageTableWindow extends JFrame {
 
@@ -39,7 +44,7 @@ public class PageTableWindow extends JFrame {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(300, 200);
+		this.setSize(726, 279);
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.setContentPane(getJContentPane());
 		this.setTitle("JFrame");
@@ -116,7 +121,17 @@ public class PageTableWindow extends JFrame {
 	}
 	
 	public void draw(MemoryPaging m) {
-		getJTable().setModel(new MemoryPagingTableModel(m));
+		if(m instanceof MemoryPagingByDemand) {
+			getJTable().setModel(new MemoryPagingByDemandTableModel((MemoryPagingByDemand) m));
+			
+			MemoryTableCellRenderer mtCellRenderer = new MemoryTableCellRenderer();
+			TableColumnModel tColModel = getJTable().getColumnModel();
+			for(int i = 0; i < tColModel.getColumnCount(); i++) {
+				tColModel.getColumn(i).setCellRenderer(mtCellRenderer);
+			}
+		}
+		else
+			getJTable().setModel(new MemoryPagingTableModel(m));
 	}
 
 	/**
@@ -144,4 +159,4 @@ public class PageTableWindow extends JFrame {
 		return jTable1;
 	}
 
-}
+}  //  @jve:decl-index=0:visual-constraint="10,10"
