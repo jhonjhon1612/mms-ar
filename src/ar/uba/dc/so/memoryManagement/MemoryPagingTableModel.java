@@ -37,7 +37,7 @@ public class MemoryPagingTableModel extends AbstractTableModel {
 		case 2:
 			return p.sizeInKb + "Kb";
 		case 3:
-			return "0x" + Integer.toHexString(p.sizeInKb * arg0).toUpperCase();
+			return  "0x" + Integer.toHexString(p.sizeInKb * arg0).toUpperCase();
 		}
 		
 		return null;
