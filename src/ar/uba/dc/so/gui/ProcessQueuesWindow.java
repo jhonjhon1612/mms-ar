@@ -19,6 +19,7 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
+import java.awt.Dimension;
 
 public class ProcessQueuesWindow extends JFrame {
 
@@ -65,7 +66,7 @@ public class ProcessQueuesWindow extends JFrame {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(300, 548);
+		this.setSize(300, 467);
 		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.setContentPane(getJContentPane());
 		this.setTitle("Memory Simulator (Processes)");
@@ -97,7 +98,7 @@ public class ProcessQueuesWindow extends JFrame {
 		if (jSplitPane == null) {
 			jSplitPane = new JSplitPane();
 			jSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-			jSplitPane.setDividerLocation(180);
+			jSplitPane.setDividerLocation(210);
 			jSplitPane.setBottomComponent(getJSplitPane2());
 			jSplitPane.setTopComponent(getJSplitPane1());
 		}
@@ -146,7 +147,7 @@ public class ProcessQueuesWindow extends JFrame {
 			jInterruptedProcessesPanel = new JPanel();
 			jInterruptedProcessesPanel.setLayout(new BorderLayout());
 			jInterruptedProcessesPanel.add(getJScrollPane2(), BorderLayout.CENTER);
-			jInterruptedProcessesPanel.add(new JLabel("Interruoted"), BorderLayout.NORTH);
+			jInterruptedProcessesPanel.add(new JLabel("Interrupted"), BorderLayout.NORTH);
 		}
 		return jInterruptedProcessesPanel;
 	}
@@ -171,7 +172,7 @@ public class ProcessQueuesWindow extends JFrame {
 			jSplitPane2.setOrientation(JSplitPane.VERTICAL_SPLIT);
 			jSplitPane2.setTopComponent(getJInterruptedProcessesPanel());
 			jSplitPane2.setBottomComponent(getJFinishedProcessesPanel());
-			jSplitPane2.setDividerLocation(200);
+			jSplitPane2.setDividerLocation(100);
 		}
 		return jSplitPane2;
 	}

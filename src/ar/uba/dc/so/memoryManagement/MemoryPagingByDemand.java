@@ -153,6 +153,14 @@ public abstract class MemoryPagingByDemand extends MemoryPaging {
 	}
 	
 	@Override
+	public Integer getProcessPageNumber(Integer partition, Integer processId) {
+		for (Integer page : processesPages.get(processId).keySet())
+			if (processesPages.get(processId).get(page).get("partitionPos") == partition)
+				return page;
+		return null;
+	}
+	
+	@Override
 	protected void writePageLog() {
 		for (Integer processId : processesPages.keySet()) {
 			System.out.println("\nPages Table for the process " + processId + " have " + processesPages.get(processId).size() + " positions.");
