@@ -122,10 +122,10 @@ public class CmdLineMode {
 				break;
 		}
 		Scheduler scheduler = new Scheduler(memory);
-		if(pscl != null)
-			scheduler.addProcessStatusChangeListener(pscl);
 		if(ssl != null)
 			scheduler.addSchedulerStepListener(ssl);
+		if(pscl != null)
+			scheduler.addProcessStatusChangeListener(pscl);
 		scheduler.initialize(processesFile);
 		
 		try {

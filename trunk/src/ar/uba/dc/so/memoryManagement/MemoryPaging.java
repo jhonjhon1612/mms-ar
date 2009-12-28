@@ -118,6 +118,13 @@ public class MemoryPaging extends Memory {
 		return null;
 	}
 
+	public Integer getProcessPageNumber(Integer partition, Integer processId) {
+		for (Integer page : processesPages.get(processId).keySet())
+			if (processesPages.get(processId).get(page) == partition)
+				return page;
+		return null;
+	}
+	
 	@Override
 	public void writeLog() {
 		writePageLog();

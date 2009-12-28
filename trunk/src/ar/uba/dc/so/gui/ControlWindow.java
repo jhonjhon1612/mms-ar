@@ -214,7 +214,7 @@ public class ControlWindow extends JFrame {
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Paging by demand", PAGING_BY_DEMAND));
 			
 			jMemoryTypeComboBox.setSelectedIndex(1);
-			final PageTableWindow pageTableWindow = ptw; 
+			final ControlWindow cw = this; 
 			jMemoryTypeComboBox.addItemListener(new java.awt.event.ItemListener() {
 				@SuppressWarnings("unchecked")
 				public void itemStateChanged(java.awt.event.ItemEvent e) {
@@ -224,7 +224,7 @@ public class ControlWindow extends JFrame {
 						fillJAlgorithmComboBox(option);
 						getJAlgorithmComboBox().setEnabled(true);
 					}
-					pageTableWindow.setVisible(option == PAGING || option == PAGING_BY_DEMAND);
+					cw.ptw.setVisible(option == PAGING || option == PAGING_BY_DEMAND);
 				}
 			});
 		}
@@ -347,6 +347,7 @@ public class ControlWindow extends JFrame {
 		if (jProgressPanel == null) {
 			jInfoLabel = new JLabel();
 			jInfoLabel.setText("Status: simulating; Fragmentation index: 2%");
+			jInfoLabel.setVisible(false);
 			jProgressPanel = new JPanel();
 			jProgressPanel.setLayout(new BorderLayout());
 			jProgressPanel.setBounds(new Rectangle(3, 208, 355, 79));
@@ -432,74 +433,10 @@ public class ControlWindow extends JFrame {
 					cw.getJMemoryUsageProgressBar().setString( "0KB / " + memorySizeInKb + "KB");
 					
 					
+					final SchedulerStepListener ssl = new CustomSchedulerStepListener(cw, mw, ptw);
+					final ProcessStatusChangeListener pscl = new CustomProcessStatusChangeListener(pw);
 					
 					try {
-						final ProcessStatusChangeListener pscl = new ProcessStatusChangeListener() {
-							
-							public void statusChanged(ProcessStatusChangeEvent e) {
-								System.out.println("Process " + e.getProcess().id + " moved from " + e.getPreviousState() + " to " + e.getNextState());
-								
-								if(e.getPreviousState() != null) {
-									switch(e.getPreviousState()) {
-									case WAITING:
-										pw.removeProcessWaiting(e.getProcess());
-										break;
-									case RUNNING:
-										pw.removeProcessRunning(e.getProcess());
-										break;
-									case INTERRUPTED:
-										pw.removeProcessInterrupted(e.getProcess());
-										break;
-									case FINISHED:
-										pw.removeProcessFinished(e.getProcess());
-										break;
-									}
-								}
-								
-								switch(e.getNextState()) {
-								case WAITING:
-									pw.addProcessWaiting(e.getProcess());
-									break;
-								case RUNNING:
-									pw.addProcessRunning(e.getProcess());
-									break;
-								case INTERRUPTED:
-									pw.addProcessInterrupted(e.getProcess());
-									break;
-								case FINISHED:
-									pw.addProcessFinished(e.getProcess());
-									break;
-								}
-							}
-						};
-						
-						final SchedulerStepListener ssl = new SchedulerStepListener() {
-							
-							public void schedullerStep(SchedulerStepEvent e) {
-								Scheduler s = (Scheduler) e.getSource();
-								
-								// Actualizo progreso en la simulación
-								cw.getJProgressBar().setValue(Scheduler.getTimeInSeconds());
-								cw.getJProgressBar().setString("Elapsed simulation time: " + Scheduler.getTimeInSeconds() + "s");
-								
-								// Actualizo el uso de memoria
-								Memory m = s.getMemory();
-								cw.getJMemoryUsageProgressBar().setValue(m.getAllocedSize());
-								cw.getJMemoryUsageProgressBar().setString(m.getAllocedSize() + "KB / " + m.sizeInKb + "KB");
-								
-								jInfoLabel.setText("Status: simulating; Wasted memory: " + m.getWastedMemory() + "KB");
-								
-								mw.draw(m);
-								if(m instanceof MemoryPaging) {
-									MemoryPaging mPrima = (MemoryPaging) m;
-									ptw.draw(mPrima);
-								}
-								
-								if(getJStepByStepCheckBox().isSelected())
-									stopSimulationButtonAction();
-							}
-						};
-						
 						// Launch a new thread so GUI is not affected
 						final Integer memoryType = memType;
 						if(tSimulator == null) {
@@ -547,13 +484,20 @@ public class ControlWindow extends JFrame {
 		return jStopSimulationButton;
 	}
 
-	private void stopSimulationButtonAction() {
-		tSimulator.suspend();
-		
+	@SuppressWarnings("deprecation")
+	protected void stopSimulationButtonAction() {
 		getJStartSimulationButton().setEnabled(true);
+		getJStartSimulationButton().setText("NEXT STEP");
+		
 		getJRestartButton().setEnabled(true);
 		
 		getJStopSimulationButton().setEnabled(false);
+		
+		// This has to be done at the end
+		// because when you execute in StepByStep mode
+		// this is called inside tSimulator itself
+		// so if you stop it before it never finishes its job
+		tSimulator.suspend();
 	}
 	
 	/**
@@ -561,7 +505,7 @@ public class ControlWindow extends JFrame {
 	 * 	
 	 * @return javax.swing.JProgressBar	
 	 */
-	private JProgressBar getJProgressBar() {
+	protected JProgressBar getJProgressBar() {
 		if (jProgressBar == null) {
 			jProgressBar = new JProgressBar();
 			jProgressBar.setValue(0);
@@ -612,7 +556,7 @@ public class ControlWindow extends JFrame {
 	 * 	
 	 * @return javax.swing.JProgressBar	
 	 */
-	private JProgressBar getJMemoryUsageProgressBar() {
+	protected JProgressBar getJMemoryUsageProgressBar() {
 		if (jMemoryUsageProgressBar == null) {
 			jMemoryUsageProgressBar = new JProgressBar();
 			jMemoryUsageProgressBar.setBounds(new Rectangle(6, 4, 62, 271));
@@ -644,7 +588,7 @@ public class ControlWindow extends JFrame {
 	 * 	
 	 * @return javax.swing.JCheckBox	
 	 */
-	private JCheckBox getJStepByStepCheckBox() {
+	protected JCheckBox getJStepByStepCheckBox() {
 		if (jStepByStepCheckBox == null) {
 			jStepByStepCheckBox = new JCheckBox();
 			jStepByStepCheckBox.setBounds(new Rectangle(213, 76, 21, 21));
@@ -679,6 +623,7 @@ public class ControlWindow extends JFrame {
 		getJMemoryUsageProgressBar().setString( "0KB");
 		getJProgressBar().setValue(0);
 		getJProgressBar().setString("0s");
+		getJStartSimulationButton().setText("START");
 	}
 	
 	/**

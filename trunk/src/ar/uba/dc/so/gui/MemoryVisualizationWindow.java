@@ -9,6 +9,7 @@ import javax.swing.JScrollPane;
 
 import ar.uba.dc.so.domain.Partition;
 import ar.uba.dc.so.memoryManagement.Memory;
+import ar.uba.dc.so.memoryManagement.MemoryPaging;
 
 import com.mxgraph.layout.mxStackLayout;
 import com.mxgraph.model.mxCell;
@@ -87,15 +88,19 @@ public class MemoryVisualizationWindow extends JFrame {
 		g.getModel().beginUpdate();
 		
 		Object prev = null;
+		int pos = 0;
 		for(Partition p : m.getPartitions()) {
 			String process = "";
-			if(!p.isEmpty())
+			if(!p.isEmpty()) {
 				process += "\nProcess: " + p.getProcessId();
+				if(m instanceof MemoryPaging)
+					process += "\nPage: " + ((MemoryPaging) m).getProcessPageNumber(pos++, p.getProcessId()); 
+			}
 			
 			if(prev == null)
-				prev = g.insertVertex(g.getDefaultParent(), null, p.sizeInKb + "KB" + process, 0, 5, 40, p.sizeInKb * 2);
+				prev = g.insertVertex(g.getDefaultParent(), null, p.sizeInKb + "KB" + process, 0, 5, 60, 40 + p.sizeInKb * 2);
 			else {
-				Object now = g.insertVertex(g.getDefaultParent(), null, p.sizeInKb + "KB" + process, 0, 5, 40, p.sizeInKb * 2);
+				Object now = g.insertVertex(g.getDefaultParent(), null, p.sizeInKb + "KB" + process, 0, 5, 60, 40 + p.sizeInKb * 2);
 				//g.insertEdge(g.getDefaultParent(), "", "", prev, now);
 				prev = now;
 			}
