@@ -6,6 +6,4 @@ public class MemorySwapping extends MemorySimpleContiguous { // Swapping is impl
 		super(sizeInKb);
 		initPartitions();
 	}
-	
-	public void initPartitions() {}
 }
