@@ -73,6 +73,9 @@ public class MemoryPaging extends Memory {
 		Partition partition = new Partition(pageSizeInKb);
 		partition.setProcessId(processId);
 		partitions.set(pos, partition);
+		
+		usedSizeInKb += partition.sizeInKb;
+		reallyUsedInKb += partition.sizeInKb;
 	}
 	
 	protected Integer getEmptyPartitionIndex() {
@@ -85,6 +88,9 @@ public class MemoryPaging extends Memory {
 	
 	protected void freePartition(Integer partitionPos) {
 		partitions.get(partitionPos).clear();
+		
+		usedSizeInKb -= partitions.get(partitionPos).sizeInKb;
+		reallyUsedInKb -= partitions.get(partitionPos).sizeInKb;
 	}
 
 	protected int getNumberOfPages() {

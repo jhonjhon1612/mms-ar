@@ -31,6 +31,6 @@ public class GraphicMode {
 		pw.setVisible(true);
 		mw.setVisible(true);
 		oc.setVisible(true);
-		ptw.setVisible(true);
+		// ptw.setVisible(true); // Only visible when paged memory is selected
 	}
 }
