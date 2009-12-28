@@ -12,7 +12,10 @@ public class CustomProcessStatusChangeListener implements ProcessStatusChangeLis
 	
 	@Override
 	public void statusChanged(ProcessStatusChangeEvent e) {
-		System.out.println("Process " + e.getProcess().id + " moved from " + e.getPreviousState() + " to " + e.getNextState());
+		if(e.getPreviousState() != null)
+			System.out.println("Process " + e.getProcess().id + " moved from " + e.getPreviousState() + " to " + e.getNextState());
+		else
+			System.out.println("Process " + e.getProcess().id + " is now " + e.getNextState());
 		
 		if(e.getPreviousState() != null) {
 			switch(e.getPreviousState()) {
