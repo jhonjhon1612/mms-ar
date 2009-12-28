@@ -32,8 +32,26 @@ import javax.swing.JSlider;
 import java.awt.Font;
 import javax.swing.JCheckBox;
 
+import com.sun.org.apache.bcel.internal.generic.CPInstruction;
+
 public class ControlWindow extends JFrame {
 	public static String DEFAULT_PPROCESSES_FILE_NAME = "/Users/Ignacio/workspace/OSMMS/resources/processes.yml";
+	
+	public static int SIMPLE_CONTIGUOUS = 1;
+	public static int SWAPPING = 2;
+	public static int FIXED_PARTITION = 3;
+	public static int VARIABLE_PARTITION = -1;
+	public static int VARIABLE_PARTITION_FIRST_FREE_ZONE = 4;
+	public static int VARIABLE_PARTITION_BEST_ZONE = 5;
+	public static int VARIABLE_PARTITION_WORST_ZONE = 6;
+	public static int VARIABLE_PARTITION_FIRST_FREE_ZONE_COMPACT = 7;
+	public static int VARIABLE_PARTITION_BEST_ZONE_COMPACT = 8;
+	public static int VARIABLE_PARTITION_WORST_ZONE_COMPACT = 9;
+	public static int PAGING = 10;
+	public static int PAGING_BY_DEMAND = -2;
+	public static int PAGING_BY_DEMAND_LRU = 11;
+	public static int PAGING_BY_DEMAND_NRU = 12;
+	public static int PAGING_BY_DEMAND_FIFO = 13;
 	
 	private Thread tSimulator;
 	
@@ -188,23 +206,25 @@ public class ControlWindow extends JFrame {
 			jMemoryTypeComboBox.setBounds(new Rectangle(6, 23, 196, 21));
 			
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("", 0));
-			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Simple Contiguous", 1));
-			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Swapping", 2));
-			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Fixed Partition", 3));
-			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Variable Partition", -1));
-			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Paging", 10));
-			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Paging by demand", -2));
+			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Simple Contiguous", SIMPLE_CONTIGUOUS));
+			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Swapping", SWAPPING));
+			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Fixed Partition", FIXED_PARTITION));
+			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Variable Partition", VARIABLE_PARTITION));
+			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Paging", PAGING));
+			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Paging by demand", PAGING_BY_DEMAND));
 			
 			jMemoryTypeComboBox.setSelectedIndex(1);
+			final PageTableWindow pageTableWindow = ptw; 
 			jMemoryTypeComboBox.addItemListener(new java.awt.event.ItemListener() {
 				@SuppressWarnings("unchecked")
 				public void itemStateChanged(java.awt.event.ItemEvent e) {
 					getJAlgorithmComboBox().setEnabled(false);
 					int option = ((ComboBoxOption<Integer>) getJMemoryTypeComboBox().getSelectedItem()).getValue();
-					if(option == -1 || option == -2) {
+					if(option == VARIABLE_PARTITION || option == PAGING_BY_DEMAND) {
 						fillJAlgorithmComboBox(option);
 						getJAlgorithmComboBox().setEnabled(true);
 					}
+					pageTableWindow.setVisible(option == PAGING || option == PAGING_BY_DEMAND);
 				}
 			});
 		}
@@ -261,17 +281,17 @@ public class ControlWindow extends JFrame {
 		
 		switch (parentOption) {
 		case -1:
-			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("First Free Zone", 4));
-			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("Best Zone", 5));
-			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("Worst Zone", 6));
-			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("First Free Zone (compactation)", 7));
-			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("Best Zone (compactation)", 8));
-			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("Worst Zone (compactation)", 9));
+			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("First Free Zone", VARIABLE_PARTITION_FIRST_FREE_ZONE));
+			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("Best Zone", VARIABLE_PARTITION_BEST_ZONE));
+			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("Worst Zone", VARIABLE_PARTITION_WORST_ZONE));
+			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("First Free Zone (compactation)", VARIABLE_PARTITION_FIRST_FREE_ZONE_COMPACT));
+			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("Best Zone (compactation)", VARIABLE_PARTITION_BEST_ZONE_COMPACT));
+			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("Worst Zone (compactation)", VARIABLE_PARTITION_WORST_ZONE_COMPACT));
 			break;
 		case -2:
-			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("LRU", 11));
-			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("NRU", 12));
-			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("FIFO", 13));
+			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("LRU", PAGING_BY_DEMAND_LRU));
+			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("NRU", PAGING_BY_DEMAND_NRU));
+			jAlgorithmComboBox.addItem(new ComboBoxOption<Integer>("FIFO", PAGING_BY_DEMAND_FIFO));
 			break;
 		default:
 			break;
@@ -396,7 +416,7 @@ public class ControlWindow extends JFrame {
 					Integer memType = comboBoxOption.getValue();
 					if(memType == 0)
 						return;
-					else if (memType == -1 || memType == -2) {
+					else if (memType == VARIABLE_PARTITION || memType == PAGING_BY_DEMAND) {
 						ComboBoxOption<Integer> comboBoxOption2 = (ComboBoxOption<Integer>) jAlgorithmComboBox.getSelectedItem();
 						memType = comboBoxOption2.getValue();
 					}
@@ -635,17 +655,24 @@ public class ControlWindow extends JFrame {
 	private void restartSimulationButtonAction() {
 		activateSimulationControls(true);
 		
-		// Nueva ventana de visualizaciï¿½n de procesos
+		// Nueva ventana de visualización de procesos
 		pw.setVisible(false);
 		pw.dispose();
 		pw = new ProcessQueuesWindow();
 		pw.setVisible(true);
 		
-		// Nueva ventana de visualizaciï¿½n de memoria
+		// Nueva ventana de visualización de memoria
 		mw.setVisible(false);
 		mw.dispose();
 		mw = new MemoryVisualizationWindow();
 		mw.setVisible(true);
+		
+		// Nueva ventana de visualización de memoria
+		ptw.setVisible(false);
+		ptw.dispose();
+		ptw = new PageTableWindow();
+		int memorySelected = ((ComboBoxOption<Integer>) getJMemoryTypeComboBox().getSelectedItem()).getValue();
+		ptw.setVisible( memorySelected == PAGING || memorySelected == PAGING_BY_DEMAND );
 		
 		// Limpiar indicadores de estado
 		getJMemoryUsageProgressBar().setValue(0);
