@@ -207,7 +207,7 @@ public class ControlWindow extends JFrame {
 			
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("", 0));
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Simple Contiguous", SIMPLE_CONTIGUOUS));
-			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Swapping", SWAPPING));
+			// jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Swapping", SWAPPING));
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Fixed Partition", FIXED_PARTITION));
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Variable Partition", VARIABLE_PARTITION));
 			jMemoryTypeComboBox.addItem(new ComboBoxOption<Integer>("Paging", PAGING));
