@@ -41,7 +41,7 @@ public class CmdLineMode {
 		System.out.println("\t\t6) Variable partition 'Worst Zone'.");
 		System.out.println("\t\t7) Variable partition 'First Free Zone' (with compactation).");
 		System.out.println("\t\t8) Variable partition 'Best Zone' (with compactation).");
-		System.out.println("\t\t9) Variable partition 'Worst Zone' (with compactation).\n");
+		System.out.println("\t\t9) Variable partition 'Worst Zone' (with compactation).");
 		System.out.println("\t\t10) Paging.");
 		System.out.println("\t\t11) Paging by Demand 'LRU'.");
 		System.out.println("\t\t12) Paging by Demand 'NRU'.");

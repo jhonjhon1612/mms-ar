@@ -12,15 +12,11 @@ import java.io.File;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 
-import ar.uba.dc.so.domain.ProcessStatusChangeEvent;
 import ar.uba.dc.so.domain.ProcessStatusChangeListener;
 import ar.uba.dc.so.domain.Scheduler;
-import ar.uba.dc.so.domain.SchedulerStepEvent;
 import ar.uba.dc.so.domain.SchedulerStepListener;
 import ar.uba.dc.so.gui.component.ComboBoxOption;
 import ar.uba.dc.so.gui.component.IntegerTextField;
-import ar.uba.dc.so.memoryManagement.Memory;
-import ar.uba.dc.so.memoryManagement.MemoryPaging;
 import ar.uba.dc.so.simulator.CmdLineMode;
 import javax.swing.JButton;
 import javax.swing.BorderFactory;
@@ -31,8 +27,6 @@ import java.awt.Color;
 import javax.swing.JSlider;
 import java.awt.Font;
 import javax.swing.JCheckBox;
-
-import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 
 public class ControlWindow extends JFrame {
 	public static String DEFAULT_PPROCESSES_FILE_NAME = "/Users/Ignacio/workspace/OSMMS/resources/processes.yml";

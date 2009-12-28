@@ -19,7 +19,6 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
-import java.awt.Dimension;
 
 public class ProcessQueuesWindow extends JFrame {
 
