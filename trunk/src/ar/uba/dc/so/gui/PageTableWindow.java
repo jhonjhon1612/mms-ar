@@ -43,7 +43,7 @@ public class PageTableWindow extends JFrame {
 		
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.setContentPane(getJContentPane());
-		this.setTitle("JFrame");
+		this.setTitle("Pages Table");
 		
 		this.setUndecorated(true);
 		this.getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG);
