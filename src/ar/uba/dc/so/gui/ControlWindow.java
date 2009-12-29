@@ -3,6 +3,7 @@ package ar.uba.dc.so.gui;
 import java.awt.BorderLayout;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.JComboBox;
@@ -29,7 +30,7 @@ import java.awt.Font;
 import javax.swing.JCheckBox;
 
 public class ControlWindow extends JFrame {
-	public static String DEFAULT_PPROCESSES_FILE_NAME = "/Users/Ignacio/workspace/OSMMS/resources/processes.yml";
+	//public static String DEFAULT_PPROCESSES_FILE_NAME = "/Users/Ignacio/workspace/OSMMS/resources/processes.yml";
 	
 	public static int SIMPLE_CONTIGUOUS = 1;
 	public static int SWAPPING = 2;
@@ -317,7 +318,8 @@ public class ControlWindow extends JFrame {
 			jFileChooseButton = new JButton();
 			jFileChooseButton.setBounds(new Rectangle(214, 119, 82, 20));
 			jFileChooseButton.setText("Choose");
-			final JFileChooser fc = new JFileChooser(new File(DEFAULT_PPROCESSES_FILE_NAME));
+			final JFileChooser fc = new JFileChooser();
+			//final JFileChooser fc = new JFileChooser(new File(DEFAULT_PPROCESSES_FILE_NAME));
 			jFileChooseButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					int retVal = fc.showOpenDialog(ControlWindow.this);
@@ -405,6 +407,13 @@ public class ControlWindow extends JFrame {
 			jStartSimulationButton.addActionListener(new java.awt.event.ActionListener() {
 				@SuppressWarnings("unchecked")
 				public void actionPerformed(java.awt.event.ActionEvent e) {
+					final String processesFile = jProcessFileTextField.getText();
+					File f = new File(processesFile);
+					if(!f.exists()) {
+						JOptionPane.showMessageDialog(cw, "Processes file \""+processesFile+"\" doesn't exist", "Error", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					
 					startSimulationButtonAction();
 					
 					ComboBoxOption<Integer> comboBoxOption = (ComboBoxOption<Integer>) jMemoryTypeComboBox.getSelectedItem();
@@ -418,7 +427,6 @@ public class ControlWindow extends JFrame {
 					
 					final Integer memorySizeInKb = Integer.parseInt(jMemorySizeTextField.getText());
 					final Integer runForInSeconds = Integer.parseInt(jTimeToSimulateTextField.getText());
-					final String processesFile = jProcessFileTextField.getText();
 					final Integer fixedPartitionSizeInKb = Integer.parseInt(getJPartitionSize().getText());
 					
 					cw.getJProgressBar().setMaximum(runForInSeconds);
