@@ -55,15 +55,16 @@ public class CmdLineMode {
 		System.out.println("\t- And empty list inside the position list means all the positions of code.\n");
 		System.out.println("\t-f, -fixedPartitionSize\t[ONLY FOR FIXED PARTITION MODE] The memory partition size in Kb. Must be a possitive number, bigger than zero and divisor of the total memory size.");	
 		System.out.println("\t-c, -pageSize\t[ONLY FOR PAGING MODES] The memory page size in Kb. Must be a possitive number, bigger than zero and divisor of the total memory size.");	
+		System.out.println("\t-o, -cores\tThe number of cores. Must be bigger than 0.");	
 		System.out.println("\t-g, -graphicMode\tIts FALSE by default (if its not setted).\n");	
 		System.exit(0);
 	}
 	
-	public static void run(Integer memoryType, Integer memorySizeInKb, Integer fixedPartitionSizeInKb, Integer pageSizeInKb, Integer runForInSeconds, String processesFile) throws Exception {
-		run(1, null, null, memoryType, memorySizeInKb, fixedPartitionSizeInKb, pageSizeInKb, runForInSeconds, processesFile);
+	public static void run(Integer memoryType, Integer memorySizeInKb, Integer fixedPartitionSizeInKb, Integer pageSizeInKb, Integer runForInSeconds, String processesFile, Integer cores) throws Exception {
+		run(1, null, null, memoryType, memorySizeInKb, fixedPartitionSizeInKb, pageSizeInKb, runForInSeconds, processesFile, cores);
 	}	
 	
-	public static void run(int speedFactor, SchedulerStepListener ssl, ProcessStatusChangeListener pscl, Integer memoryType, Integer memorySizeInKb, Integer fixedPartitionSizeInKb, Integer pageSizeInKb, Integer runForInSeconds, String processesFile) throws Exception {
+	public static void run(int speedFactor, SchedulerStepListener ssl, ProcessStatusChangeListener pscl, Integer memoryType, Integer memorySizeInKb, Integer fixedPartitionSizeInKb, Integer pageSizeInKb, Integer runForInSeconds, String processesFile, Integer cores) throws Exception {
 		if (
 		(memoryType == null || memorySizeInKb == null || runForInSeconds == null || processesFile == null) || (memoryType == 3 && fixedPartitionSizeInKb == null) || 
 		!(new File(processesFile)).exists() || 
@@ -121,7 +122,7 @@ public class CmdLineMode {
 				memory = new MemoryPagingByDemandFIFO(memorySizeInKb, pageSizeInKb);
 				break;
 		}
-		Scheduler scheduler = new Scheduler(memory);
+		Scheduler scheduler = new Scheduler(memory, cores);
 		if(ssl != null)
 			scheduler.addSchedulerStepListener(ssl);
 		if(pscl != null)
