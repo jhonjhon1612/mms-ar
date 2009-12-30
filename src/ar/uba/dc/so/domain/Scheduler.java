@@ -17,6 +17,7 @@ import ar.uba.dc.so.memoryManagement.Memory;
 
 public class Scheduler {
 	private final Memory memory;
+	private final Integer cores;
 	public static Map<Integer, Process> processes = new HashMap<Integer, Process>();
 
 	// Listeners
@@ -32,8 +33,9 @@ public class Scheduler {
 	
 	private static int timeInSeconds = 0;
 	
-	public Scheduler(Memory memory) throws IOException {
+	public Scheduler(Memory memory, int cores) throws IOException {
 		this.memory = memory;
+		this.cores = cores;
 	}
 	
 	public void initialize(String processesFileName) throws Exception {
@@ -111,6 +113,8 @@ public class Scheduler {
 			}
 		}
 		for (int i = 0; i < processesWaiting.size(); i++) {
+			if (processesRunning.size() >= cores)
+				break;
 			Process process = processesWaiting.get(i);
 			System.out.println("Try to alloc process " + process.id + " (" + process.sizeInKb + " KB).");
 			if (!processesWereInterrupted.contains(process.id) || memory.getClass().getName() == "ar.uba.dc.so.memoryManagement.MemorySwapping") {

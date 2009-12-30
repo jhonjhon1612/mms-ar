@@ -12,6 +12,7 @@ public class Simulator {
         CmdLineParser.Option optProcessesFile = parser.addStringOption('p', "processesFile");
         CmdLineParser.Option optFixedPartitionSizeInKb = parser.addIntegerOption('f', "fixedPartitionSize");
         CmdLineParser.Option optPageSizeInKb = parser.addIntegerOption('c', "pageSize");
+        CmdLineParser.Option optCores = parser.addIntegerOption('o', "cores");
         
         try {
             parser.parse(args);
@@ -26,13 +27,14 @@ public class Simulator {
 		if (graphicMode) {
 			GraphicMode.run();
 		} else {
-			Integer memoryType = (Integer)parser.getOptionValue(optMemoryType);// Integer.parseInt(args[0]);
+			Integer memoryType = (Integer)parser.getOptionValue(optMemoryType);
 			Integer memorySizeInKb = (Integer)parser.getOptionValue(optMemorySizeInKb);
 			Integer runForInSeconds = (Integer)parser.getOptionValue(optRunForInSeconds);
 			String processesFile = (String)parser.getOptionValue(optProcessesFile);
 			Integer fixedPartitionSizeInKb = (Integer)parser.getOptionValue(optFixedPartitionSizeInKb);
 			Integer pageSizeInKb = (Integer)parser.getOptionValue(optPageSizeInKb);
-			CmdLineMode.run(memoryType, memorySizeInKb, fixedPartitionSizeInKb, pageSizeInKb, runForInSeconds, processesFile);
+			Integer cores = (Integer)parser.getOptionValue(optCores);
+			CmdLineMode.run(memoryType, memorySizeInKb, fixedPartitionSizeInKb, pageSizeInKb, runForInSeconds, processesFile, cores);
 		}
 	}
 	
