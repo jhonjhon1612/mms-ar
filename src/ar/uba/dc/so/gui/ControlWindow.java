@@ -91,6 +91,8 @@ public class ControlWindow extends JFrame {
 	private JLabel jStepByStepLabel = null;
 
 	private JButton jRestartButton = null;
+	private IntegerTextField jCoresNumber = null;
+	private JLabel jCoresNumberLabel = null;
 	
 	/**
 	 * This is the default constructor
@@ -140,6 +142,9 @@ public class ControlWindow extends JFrame {
 	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
+			jCoresNumberLabel = new JLabel();
+			jCoresNumberLabel.setBounds(new Rectangle(246, 107, 78, 16));
+			jCoresNumberLabel.setText("N° of cores");
 			jStepByStepLabel = new JLabel();
 			jStepByStepLabel.setBounds(new Rectangle(232, 79, 112, 16));
 			jStepByStepLabel.setText("Step by Step");
@@ -150,7 +155,7 @@ public class ControlWindow extends JFrame {
 			jSpeedLabel.setBounds(new Rectangle(7, 152, 356, 16));
 			jSpeedLabel.setText("Simulation Speed (ranging from 2s per step to 100ms per step)");
 			jProcessFileLabel = new JLabel();
-			jProcessFileLabel.setBounds(new Rectangle(7, 102, 155, 16));
+			jProcessFileLabel.setBounds(new Rectangle(5, 113, 155, 16));
 			jProcessFileLabel.setText("Processes File");
 			jAlgorithmLabel = new JLabel();
 			jAlgorithmLabel.setBounds(new Rectangle(223, 4, 76, 16));
@@ -186,6 +191,8 @@ public class ControlWindow extends JFrame {
 			jContentPane.add(getJStepByStepCheckBox(), null);
 			jContentPane.add(jStepByStepLabel, null);
 			jContentPane.add(getJRestartButton(), null);
+			jContentPane.add(getJCoresNumber(), null);
+			jContentPane.add(jCoresNumberLabel, null);
 		}
 		return jContentPane;
 	}
@@ -302,7 +309,7 @@ public class ControlWindow extends JFrame {
 	private JTextField getJProcessFileTextField() {
 		if (jProcessFileTextField == null) {
 			jProcessFileTextField = new JTextField();
-			jProcessFileTextField.setBounds(new Rectangle(7, 119, 207, 20));
+			jProcessFileTextField.setBounds(new Rectangle(5, 130, 207, 20));
 			jProcessFileTextField.setEnabled(false);
 		}
 		return jProcessFileTextField;
@@ -316,7 +323,7 @@ public class ControlWindow extends JFrame {
 	private JButton getJFileChooseButton() {
 		if (jFileChooseButton == null) {
 			jFileChooseButton = new JButton();
-			jFileChooseButton.setBounds(new Rectangle(214, 119, 82, 20));
+			jFileChooseButton.setBounds(new Rectangle(212, 130, 82, 20));
 			jFileChooseButton.setText("Choose");
 			final JFileChooser fc = new JFileChooser();
 			//final JFileChooser fc = new JFileChooser(new File(DEFAULT_PPROCESSES_FILE_NAME));
@@ -428,6 +435,7 @@ public class ControlWindow extends JFrame {
 					final Integer memorySizeInKb = Integer.parseInt(jMemorySizeTextField.getText());
 					final Integer runForInSeconds = Integer.parseInt(jTimeToSimulateTextField.getText());
 					final Integer fixedPartitionSizeInKb = Integer.parseInt(getJPartitionSize().getText());
+					final Integer numberOfCores = Integer.parseInt(getJCoresNumber().getText());
 					
 					cw.getJProgressBar().setMaximum(runForInSeconds);
 					cw.getJMemoryUsageProgressBar().setMaximum(memorySizeInKb);
@@ -445,7 +453,7 @@ public class ControlWindow extends JFrame {
 							tSimulator = new Thread() {
 								public void run() {
 									try {
-										CmdLineMode.run(cw.getJSpeedFactorSlider().getValue(), ssl, pscl, memoryType, memorySizeInKb, fixedPartitionSizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile); //TODO tener en cuenta el tema de las particiones 
+										CmdLineMode.run(cw.getJSpeedFactorSlider().getValue(), ssl, pscl, memoryType, memorySizeInKb, fixedPartitionSizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile, numberOfCores); 
 									}
 									catch(Exception e) {
 										System.err.println(e);
@@ -652,6 +660,21 @@ public class ControlWindow extends JFrame {
 			});
 		}
 		return jRestartButton;
+	}
+
+	/**
+	 * This method initializes jCoresNumber	
+	 * 	
+	 * @return ar.uba.dc.so.gui.component.IntegerTextField	
+	 */
+	private IntegerTextField getJCoresNumber() {
+		if (jCoresNumber == null) {
+			jCoresNumber = new IntegerTextField();
+			jCoresNumber.setBounds(new Rectangle(325, 105, 27, 20));
+			jCoresNumber.setHorizontalAlignment(JTextField.RIGHT);
+			jCoresNumber.setText("4");
+		}
+		return jCoresNumber;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"
