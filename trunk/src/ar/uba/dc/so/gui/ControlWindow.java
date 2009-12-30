@@ -453,7 +453,17 @@ public class ControlWindow extends JFrame {
 							tSimulator = new Thread() {
 								public void run() {
 									try {
-										CmdLineMode.run(cw.getJSpeedFactorSlider().getValue(), ssl, pscl, memoryType, memorySizeInKb, fixedPartitionSizeInKb, fixedPartitionSizeInKb, runForInSeconds, processesFile, numberOfCores); 
+										CmdLineMode.run(
+												cw.getJSpeedFactorSlider().getValue(), 
+												ssl, 
+												pscl, 
+												memoryType, 
+												memorySizeInKb, 
+												fixedPartitionSizeInKb, 
+												fixedPartitionSizeInKb, 
+												runForInSeconds, 
+												processesFile, 
+												numberOfCores); 
 									}
 									catch(Exception e) {
 										System.err.println(e);
